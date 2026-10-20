@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#4f46e5" />
+<title>Rate your experience</title>
+
+<style>
+  :root{
+    --brand:#4f46e5;
+    --brand-2:#7c3aed;
+    --star:#fbbf24;
+    --ink:#0f172a;
+    --muted:#64748b;
+    --line:#e2e8f0;
+    --bg:#f1f5f9;
+    --card:#ffffff;
+    --ok:#16a34a;
+    --radius:22px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 500px at 50% -10%, rgba(124,58,237,.35), transparent 60%),
+      radial-gradient(900px 400px at 100% 0%, rgba(79,70,229,.30), transparent 60%),
+      var(--bg);
+    min-height:100vh;
+    display:flex;justify-content:center;
+    padding:max(18px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+  }
+  .wrap{width:100%;max-width:460px}
+
+  /* ---------- Header ---------- */
+  .brand{
+    text-align:center;color:#fff;padding:26px 8px 70px;
+  }
+  .logo{
+    width:74px;height:74px;border-radius:50%;
+    margin:0 auto 12px;display:grid;place-items:center;
+    background:rgba(255,255,255,.18);
+    border:2px solid rgba(255,255,255,.5);
+    font-size:34px;font-weight:800;letter-spacing:-1px;
+    backdrop-filter:blur(6px);
+    overflow:hidden;
+  }
+  .logo img{width:100%;height:100%;object-fit:cover}
+  .brand h1{margin:0;font-size:24px;font-weight:800;letter-spacing:-.3px}
+  .brand p{margin:6px 0 0;opacity:.9;font-size:14px}
+
+  body::before{
+    content:"";position:fixed;inset:0 0 auto 0;height:300px;z-index:-1;
+    background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--card);border-radius:var(--radius);
+    box-shadow:0 20px 50px -12px rgba(15,23,42,.30);
+    padding:26px 22px 24px;margin-top:-52px;
+    animation:rise .5s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .screen{display:none;animation:fade .35s ease both}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  h2{margin:0 0 6px;font-size:21px;letter-spacing:-.2px;text-align:center}
+  .sub{margin:0 0 20px;color:var(--muted);font-size:14px;text-align:center;line-height:1.45}
+
+  /* ---------- Stars ---------- */
+  .stars{display:flex;justify-content:center;gap:6px;margin:8px 0 10px}
+  .star{
+    background:none;border:0;padding:4px;cursor:pointer;
+    font-size:46px;line-height:1;color:#cbd5e1;
+    transition:transform .15s ease, color .15s ease;
+  }
+  .star:hover{transform:scale(1.12)}
+  .star.on{color:var(--star);filter:drop-shadow(0 3px 6px rgba(251,191,36,.45))}
+  .star.pop{animation:pop .35s ease}
+  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.35) rotate(-8deg)}100%{transform:scale(1)}}
+  .star:focus-visible{outline:3px solid rgba(79,70,229,.5);border-radius:10px}
+  .rate-label{
+    text-align:center;font-weight:700;font-size:17px;height:26px;color:var(--brand);
+  }
+  .hint{text-align:center;color:var(--muted);font-size:12.5px;margin-top:14px}
+
+  /* ---------- Choice cards ---------- */
+  .chosen{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:#f8fafc;border:1px solid var(--line);border-radius:14px;
+    padding:10px;margin-bottom:16px;font-size:14px;color:var(--muted);
+  }
+  .chosen b{color:var(--star);font-size:18px;letter-spacing:2px}
+  .chosen button{margin-left:auto;background:none;border:0;color:var(--brand);font-weight:600;cursor:pointer;font-size:13px}
+
+  .choice{
+    width:100%;text-align:left;display:flex;gap:14px;align-items:center;
+    background:#fff;border:1.5px solid var(--line);border-radius:18px;
+    padding:16px;margin-bottom:12px;cursor:pointer;font:inherit;color:inherit;
+    transition:.18s ease;
+  }
+  .choice:hover{border-color:var(--brand);box-shadow:0 8px 20px -10px rgba(79,70,229,.5);transform:translateY(-1px)}
+  .choice .ic{
+    flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;
+    background:linear-gradient(135deg,#eef2ff,#ede9fe);
+  }
+  .choice strong{display:block;font-size:15.5px}
+  .choice span{display:block;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.35}
+  .choice .arrow{margin-left:auto;color:#94a3b8;font-size:20px}
+
+  /* ---------- Chips ---------- */
+  .label{font-size:13px;font-weight:700;margin:4px 0 8px;display:block}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .chip{
+    border:1.5px solid var(--line);background:#fff;border-radius:999px;
+    padding:8px 13px;font-size:13.5px;cursor:pointer;font-family:inherit;color:var(--ink);
+    transition:.15s ease;
+  }
+  .chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+
+  /* ---------- Inputs ---------- */
+  textarea,input[type=text],input[type=tel]{
+    width:100%;font:inherit;font-size:15px;color:var(--ink);
+    border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;background:#fff;
+    outline:none;transition:.15s ease;resize:vertical;
+  }
+  textarea:focus,input:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(79,70,229,.12)}
+  textarea{min-height:130px;line-height:1.5}
+  .row{display:flex;gap:10px}
+  .row > *{flex:1}
+  .field{margin-bottom:12px}
+  .count{text-align:right;font-size:11.5px;color:var(--muted);margin-top:4px}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    width:100%;border:0;border-radius:14px;padding:15px 18px;font:inherit;font-weight:700;font-size:15.5px;
+    cursor:pointer;transition:.18s ease;display:flex;justify-content:center;align-items:center;gap:8px;
+  }
+  .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 10px 22px -8px rgba(79,70,229,.7)}
+  .btn.primary:hover{transform:translateY(-1px)}
+  .btn.primary:disabled{opacity:.45;cursor:not-allowed;transform:none}
+  .btn.ghost{background:#f1f5f9;color:var(--ink)}
+  .btn.ghost:hover{background:#e2e8f0}
+  .btn.wa{background:#25d366;color:#fff}
+  .btn + .btn{margin-top:10px}
+  .back{background:none;border:0;color:var(--muted);font:inherit;font-size:13.5px;cursor:pointer;padding:0 0 12px}
+  .back:hover{color:var(--brand)}
+
+  .tip{
+    background:#fffbeb;border:1px solid #fde68a;color:#92400e;
+    border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.45;margin:12px 0 14px;
+  }
+  .steps{font-size:13px;color:var(--muted);line-height:1.6;margin:14px 0 0;padding-left:18px}
+
+  /* ---------- Thank you ---------- */
+  .done{text-align:center;padding:8px 0}
+  .tick{
+    width:84px;height:84px;border-radius:50%;margin:6px auto 16px;display:grid;place-items:center;
+    background:#dcfce7;color:var(--ok);font-size:44px;animation:pop .5s ease;
+  }
+
+  .toast{
+    position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);
+    background:#0f172a;color:#fff;padding:11px 18px;border-radius:999px;font-size:14px;
+    opacity:0;pointer-events:none;transition:.3s ease;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .foot{text-align:center;color:var(--muted);font-size:11.5px;margin-top:18px}
+
+  canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
+</style>
+</head>
+
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="wrap">
+
+  <header class="brand">
+    <div class="logo" id="logo">★</div>
+    <h1 id="bizName">Your Business Name</h1>
+    <p id="bizTag">We'd love to hear about your visit</p>
+  </header>
+
+  <main class="card">
+
+    <!-- SCREEN 1: rating -->
+    <section class="screen active" id="s-rate">
+      <h2>How was your experience?</h2>
+      <p class="sub">Tap a star to rate us. It takes less than a minute.</p>
+      <div class="stars" id="stars" role="radiogroup" aria-label="Rating"></div>
+      <div class="rate-label" id="rateLabel"></div>
+      <p class="hint">Your rating helps us improve and helps others find us.</p>
+    </section>
+
+    <!-- SCREEN 2: choose how to share (SAME OPTIONS FOR EVERY RATING) -->
+    <section class="screen" id="s-choose">
+      <div class="chosen">
+        <span>Your rating</span> <b id="chosenStars"></b>
+        <button id="changeRating">Change</button>
+      </div>
+      <h2>How would you like to share it?</h2>
+      <p class="sub">Both options are open to you. Pick whichever suits you.</p>
+
+      <button class="choice" id="goGoogle">
+        <div class="ic">🌍</div>
+        <div><strong>Review us on Google</strong><span>Public review. We'll help you draft it, and you can edit every word.</span></div>
+        <div class="arrow">›</div>
+      </button>
+
+      <button class="choice" id="goPrivate">
+        <div class="ic">💬</div>
+        <div><strong>Send private feedback</strong><span>Goes straight to the owner so we can act on it quickly.</span></div>
+        <div class="arrow">›</div>
+      </button>
+    </section>
+
+    <!-- SCREEN 3: Google review helper -->
+    <section class="screen" id="s-google">
+      <button class="back" data-back="s-choose">← Back</button>
+      <h2>Write your Google review</h2>
+      <p class="sub">Pick what stood out, then tweak the draft so it sounds like you.</p>
+
+      <span class="label">What stood out? <small style="font-weight:400;color:var(--muted)">(optional)</small></span>
+      <div class="chips" id="chips"></div>
+
+      <span class="label">Your review</span>
+      <textarea id="draft" maxlength="600" placeholder="Write your review here..."></textarea>
+      <div class="count"><span id="cnt">0</span>/600</div>
+
+      <div class="tip">✍️ Please make sure the review reflects <b>your own genuine experience</b>. Edit the draft freely. Honest, personal reviews help other customers most.</div>
+
+      <div class="row">
+        <button class="btn ghost" id="shuffle">🔄 New draft</button>
+        <button class="btn ghost" id="copyOnly">📋 Copy</button>
+      </div>
+      <button class="btn primary" id="copyOpen" style="margin-top:10px">Copy &amp; open Google ➜</button>
+
+      <ol class="steps">
+        <li>Tap the button above. Your text is copied and Google opens.</li>
+        <li>Choose your star rating on Google and <b>paste</b> your review.</li>
+        <li>Tap <b>Post</b>. Thank you!</li>
+      </ol>
+    </section>
+
+    <!-- SCREEN 4: private feedback -->
+    <section class="screen" id="s-private">
+      <button class="back" data-back="s-choose">← Back</button>
+      <h2>Tell us privately</h2>
+      <p class="sub">Your message goes straight to the owner. Nothing is posted publicly.</p>
+
+      <div class="field">
+        <span class="label">Your feedback</span>
+        <textarea id="fbText" maxlength="800" placeholder="What went well? What could we do better?"></textarea>
+      </div>
+      <div class="row field">
+        <div><span class="label">Name <small style="font-weight:400;color:var(--muted)">(optional)</small></span>
+          <input type="text" id="fbName" placeholder="Your name" autocomplete="name" /></div>
+        <div><span class="label">Phone <small style="font-weight:400;color:var(--muted)">(optional)</small></span>
+          <input type="tel" id="fbPhone" placeholder="So we can reach you" autocomplete="tel" inputmode="tel" /></div>
+      </div>
+      <button class="btn primary" id="sendFb" disabled>Send feedback</button>
+    </section>
+
+    <!-- SCREEN 5: thank you -->
+    <section class="screen" id="s-done">
+      <div class="done">
+        <div class="tick">✓</div>
+        <h2 id="doneTitle">Thank you!</h2>
+        <p class="sub" id="doneMsg">We really appreciate your time.</p>
+        <button class="btn wa" id="waBtn" style="display:none">Also message us on WhatsApp</button>
+        <button class="btn ghost" id="again">Start over</button>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="foot">Every rating gets the same options. No filtering, no pressure.</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   CONFIGURATION  - edit this block for each business
+   You can also override from the QR link, e.g.:
+   index.html?name=Sharma%20Salon&g=<google-review-link>&wa=919876543210&tag=Hair%20%26%20Beauty
+   ===================================================================== */
+const CONFIG = {
+  BUSINESS_NAME : "Your Business Name",
+  TAGLINE       : "We'd love to hear about your visit",
+  LOGO_URL      : "",   // optional: link to a square logo image
+
+  // Your Google link. Best option is the direct "write a review" link:
+  //   https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID
+  // (Find your Place ID with Google's Place ID Finder.)
+  GOOGLE_REVIEW_URL : "https://share.google/Tkc2tflwE2i0gDzsS",
+
+  WHATSAPP_NUMBER : "",  // owner's number with country code, no + or spaces. e.g. 919876543210
+  FEEDBACK_ENDPOINT : "" // optional: Formspree / Google Apps Script / your server URL (receives JSON via POST)
+};
+
+/* ---------- allow per-business override through URL ---------- */
+(function(){
+  const p = new URLSearchParams(location.search);
+  if(p.get("name")) CONFIG.BUSINESS_NAME = p.get("name");
+  if(p.get("tag"))  CONFIG.TAGLINE = p.get("tag");
+  if(p.get("g"))    CONFIG.GOOGLE_REVIEW_URL = p.get("g");
+  if(p.get("wa"))   CONFIG.WHATSAPP_NUMBER = p.get("wa").replace(/\D/g,"");
+  if(p.get("logo")) CONFIG.LOGO_URL = p.get("logo");
+  if(p.get("ep"))   CONFIG.FEEDBACK_ENDPOINT = p.get("ep");
+})();
+
+/* =====================================================================
+   REVIEW DRAFT WRITER
+   Drafts are built from rating-appropriate fragments and from the things
+   the customer picked, so they match the customer's real experience.
+   Fragments are combined at runtime, so you get thousands of distinct
+   drafts from a few hundred pieces. No giant JSON file needed.
+   ===================================================================== */
+const TAGS = ["Service","Staff","Quality","Price","Cleanliness","Speed","Ambience"];
+
+const OPEN = {
+  pos: [
+    "Had a really good experience at {biz}.",
+    "Happy with my visit to {biz}.",
+    "Glad I chose {biz}.",
+    "My visit to {biz} was a pleasant one.",
+    "Really enjoyed my time at {biz}.",
+    "{biz} did a great job.",
+    "Came to {biz} recently and I'm impressed."
+  ],
+  mid: [
+    "Visited {biz} recently.",
+    "My experience at {biz} was decent overall.",
+    "Stopped by {biz} and had a mixed experience.",
+    "Went to {biz} this week.",
+    "An okay visit to {biz}."
+  ],
+  neg: [
+    "My visit to {biz} was disappointing.",
+    "I had a below-average experience at {biz}.",
+    "Unfortunately, {biz} fell short of my expectations.",
+    "I was hoping for better from {biz}.",
+    "Not the experience I expected at {biz}."
+  ]
+};
+
+const DETAIL = {
+  Service: {
+    pos:["The service was smooth and well organised.","Service was prompt and handled professionally.","They took good care of everything from start to finish.","Very happy with the overall service."],
+    mid:["The service was acceptable but has room to improve.","Service was fine, though nothing stood out.","Service was okay, with a few small gaps."],
+    neg:["The service did not meet expectations.","Service was disorganised and needs improvement.","I expected much better service."]
+  },
+  Staff: {
+    pos:["The staff were friendly and helpful.","The team was polite, attentive and easy to deal with.","Staff made me feel welcome and answered all my questions.","Courteous, helpful people throughout."],
+    mid:["Staff were polite, though a bit more attention would help.","The team was okay, but could be more proactive.","Some staff were helpful, others less so."],
+    neg:["Staff could have been more attentive and polite.","The team seemed disinterested and unhelpful.","Staff behaviour needs improvement."]
+  },
+  Quality: {
+    pos:["The quality was excellent and clearly well cared for.","Quality exceeded what I expected.","Great quality. You can tell attention to detail matters here.","Very good quality overall."],
+    mid:["Quality was average. Good in places, ordinary in others.","The quality was fine but not exceptional.","Quality was decent, though inconsistent."],
+    neg:["The quality was below what I expected.","Quality was not up to the mark.","I was let down by the quality."]
+  },
+  Price: {
+    pos:["Fair pricing and good value for money.","Prices are reasonable for what you get.","Great value for the price."],
+    mid:["Pricing is okay, though value could be better.","Prices felt a little high for what I received.","Fair pricing, nothing special."],
+    neg:["I didn't feel I got value for the money.","Prices felt too high for the experience.","Not great value for the price paid."]
+  },
+  Cleanliness: {
+    pos:["The place was clean and well maintained.","Impressively clean and tidy.","Hygiene and cleanliness were spot on."],
+    mid:["Cleanliness was acceptable but could be better.","The place was reasonably tidy with a few lapses.","Cleanliness is average and could use attention."],
+    neg:["Cleanliness needs serious attention.","The place was not as clean as it should be.","Hygiene standards fell short."]
+  },
+  Speed: {
+    pos:["Quick and efficient, with no long waits.","Everything was done on time.","Very prompt, and I didn't have to wait around."],
+    mid:["There was a bit of a wait, but it was manageable.","Speed was okay, not the fastest.","Timing was average."],
+    neg:["I had to wait far too long.","Things were slow and badly timed.","Delays made the experience frustrating."]
+  },
+  Ambience: {
+    pos:["Lovely ambience and a comfortable atmosphere.","A pleasant, welcoming environment.","Nice atmosphere, and I felt comfortable."],
+    mid:["The ambience was okay but nothing special.","Atmosphere was average.","Pleasant enough, though it could be more inviting."],
+    neg:["The atmosphere was not comfortable.","The ambience could use real improvement.","The environment wasn't very inviting."]
+  }
+};
+
+const GENERIC = {
+  pos:["Overall a great experience.","Everything went well.","I have nothing but good things to say.","Would definitely come back."],
+  mid:["Overall an average experience.","There's potential here.","A few things done well, a few to improve."],
+  neg:["I hope the team takes this feedback on board.","Hoping to see improvement.","There is definitely room to improve."]
+};
+
+const CLOSE = {
+  pos:["Highly recommended!","Would happily recommend to friends and family.","Will be back for sure.","Thank you to the whole team!","Keep up the good work!","Definitely worth a visit."],
+  mid:["Hope to see improvements next time.","Might visit again if things get better.","Decent, with room to grow.","Fingers crossed for a better experience next time."],
+  neg:["I hope this feedback helps the team improve.","Hoping things get better.","I'd like to see these issues addressed.","Please take this as constructive feedback."]
+};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const bucket = r => r>=4 ? "pos" : r===3 ? "mid" : "neg";
+
+function hash(str){ let h=5381; for(let i=0;i<str.length;i++) h=((h<<5)+h)+str.charCodeAt(i); return (h>>>0).toString(36); }
+
+const HIST_KEY = "rv_hist_" + hash(CONFIG.BUSINESS_NAME);
+function seen(h){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||"[]").includes(h);}catch(e){return false} }
+function remember(h){
+  try{
+    const a = JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); a.push(h);
+    localStorage.setItem(HIST_KEY, JSON.stringify(a.slice(-300)));
+  }catch(e){}
+}
+
+function buildDraft(rating, tags){
+  const b = bucket(rating);
+  let text = "";
+  for(let attempt=0; attempt<40; attempt++){
+    const parts = [ pick(OPEN[b]).replace("{biz}", CONFIG.BUSINESS_NAME) ];
+    const chosen = tags.length ? [...tags].sort(()=>Math.random()-.5).slice(0,3) : [];
+    chosen.forEach(t => parts.push(pick(DETAIL[t][b])));
+    if(!chosen.length) parts.push(pick(GENERIC[b]));
+    parts.push(pick(CLOSE[b]));
+    text = parts.join(" ");
+    if(!seen(hash(text))) break;   // avoid repeating a draft this device has already received
+  }
+  remember(hash(text));
+  return text;
+}
+
+/* ---------- state ---------- */
+let rating = 0;
+let selectedTags = new Set();
+const LABELS = ["", "Poor", "Fair", "Good", "Great", "Excellent"];
+const EMOJI  = ["", "😞", "😕", "🙂", "😄", "🤩"];
+
+/* ---------- init branding ---------- */
+document.title = "Rate " + CONFIG.BUSINESS_NAME;
+$("#bizName").textContent = CONFIG.BUSINESS_NAME;
+$("#bizTag").textContent = CONFIG.TAGLINE;
+if(CONFIG.LOGO_URL){
+  const img = new Image(); img.alt=""; img.src = CONFIG.LOGO_URL;
+  img.onload = () => { $("#logo").textContent=""; $("#logo").appendChild(img); };
+}else{
+  $("#logo").textContent = (CONFIG.BUSINESS_NAME.trim()[0] || "★").toUpperCase();
+}
+
+/* ---------- screens ---------- */
+function show(id){
+  $$(".screen").forEach(s=>s.classList.remove("active"));
+  $("#"+id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$$("[data-back]").forEach(b => b.addEventListener("click", ()=>show(b.dataset.back)));
+
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+/* ---------- stars ---------- */
+const starsEl = $("#stars");
+for(let i=1;i<=5;i++){
+  const b=document.createElement("button");
+  b.className="star"; b.type="button"; b.textContent="★";
+  b.setAttribute("role","radio"); b.setAttribute("aria-label", i+" star"+(i>1?"s":""));
+  b.dataset.v=i;
+  b.addEventListener("mouseenter",()=>paint(i));
+  b.addEventListener("focus",()=>paint(i));
+  b.addEventListener("click",()=>choose(i,b));
+  starsEl.appendChild(b);
+}
+starsEl.addEventListener("mouseleave",()=>paint(rating));
+function paint(n){
+  $$(".star").forEach(s=>s.classList.toggle("on", +s.dataset.v<=n));
+  $("#rateLabel").textContent = n ? EMOJI[n]+"  "+LABELS[n] : "";
+}
+function choose(n,btn){
+  rating=n; paint(n);
+  btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop");
+  $("#chosenStars").textContent = "★".repeat(n)+"☆".repeat(5-n);
+  setTimeout(()=>show("s-choose"), 450);
+}
+$("#changeRating").addEventListener("click",()=>show("s-rate"));
+
+/* ---------- google path ---------- */
+const chipsEl = $("#chips");
+TAGS.forEach(t=>{
+  const c=document.createElement("button");
+  c.type="button"; c.className="chip"; c.textContent=t;
+  c.addEventListener("click",()=>{
+    selectedTags.has(t) ? selectedTags.delete(t) : selectedTags.add(t);
+    c.classList.toggle("on");
+    regenerate();
+  });
+  chipsEl.appendChild(c);
+});
+function regenerate(){
+  $("#draft").value = buildDraft(rating, [...selectedTags]);
+  updateCount();
+}
+function updateCount(){ $("#cnt").textContent = $("#draft").value.length; }
+$("#draft").addEventListener("input", updateCount);
+
+$("#goGoogle").addEventListener("click",()=>{
+  selectedTags.clear(); $$(".chip").forEach(c=>c.classList.remove("on"));
+  regenerate(); show("s-google");
+});
+$("#shuffle").addEventListener("click", regenerate);
+
+async function copyText(txt){
+  try{ await navigator.clipboard.writeText(txt); return true; }
+  catch(e){
+    const ta=$("#draft"); ta.select(); ta.setSelectionRange(0,99999);
+    try{ return document.execCommand("copy"); }catch(_){ return false; }
+  }
+}
+$("#copyOnly").addEventListener("click", async()=>{
+  toast(await copyText($("#draft").value) ? "Copied to clipboard ✓" : "Press and hold to copy");
+});
+$("#copyOpen").addEventListener("click", async()=>{
+  const ok = await copyText($("#draft").value);
+  toast(ok ? "Copied! Paste it on Google ✓" : "Open Google, then paste your review");
+  setTimeout(()=>{ window.open(CONFIG.GOOGLE_REVIEW_URL, "_blank", "noopener"); }, 700);
+  finish("Thanks for sharing on Google!", "Your words help other customers find us. We really appreciate it.", true);
+});
+
+/* ---------- private feedback path ---------- */
+$("#goPrivate").addEventListener("click",()=>{ show("s-private"); });
+$("#fbText").addEventListener("input",()=>{ $("#sendFb").disabled = $("#fbText").value.trim().length < 3; });
+
+function feedbackPayload(){
+  return {
+    business: CONFIG.BUSINESS_NAME,
+    rating,
+    message: $("#fbText").value.trim(),
+    name: $("#fbName").value.trim(),
+    phone: $("#fbPhone").value.trim(),
+    time: new Date().toISOString()
+  };
+}
+$("#sendFb").addEventListener("click", async()=>{
+  const p = feedbackPayload();
+  const btn=$("#sendFb"); btn.disabled=true; btn.textContent="Sending...";
+  // store a local copy
+  try{
+    const k="rv_feedback_"+hash(CONFIG.BUSINESS_NAME);
+    const a=JSON.parse(localStorage.getItem(k)||"[]"); a.push(p); localStorage.setItem(k,JSON.stringify(a));
+  }catch(e){}
+  // send to owner's endpoint if configured
+  if(CONFIG.FEEDBACK_ENDPOINT){
+    try{
+      await fetch(CONFIG.FEEDBACK_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(p)});
+    }catch(e){}
+  }
+  btn.textContent="Send feedback";
+  finish("Thank you for telling us", "Your feedback has been shared with the owner and we'll use it to improve.", false);
+});
+
+/* ---------- finish ---------- */
+function finish(title,msg,celebrate){
+  $("#doneTitle").textContent=title; $("#doneMsg").textContent=msg;
+  const wa=$("#waBtn");
+  if(CONFIG.WHATSAPP_NUMBER && !celebrate){
+    wa.style.display="flex";
+    wa.onclick=()=>{
+      const p=feedbackPayload();
+      const text = `Feedback for ${CONFIG.BUSINESS_NAME}\nRating: ${rating}/5\n${p.message}${p.name?"\nName: "+p.name:""}${p.phone?"\nPhone: "+p.phone:""}`;
+      window.open("https://wa.me/"+CONFIG.WHATSAPP_NUMBER+"?text="+encodeURIComponent(text),"_blank","noopener");
+    };
+  } else wa.style.display="none";
+  show("s-done");
+  if(celebrate) confetti();
+}
+$("#again").addEventListener("click",()=>{
+  rating=0; selectedTags.clear(); paint(0);
+  $("#fbText").value=""; $("#fbName").value=""; $("#fbPhone").value=""; $("#sendFb").disabled=true;
+  show("s-rate");
+});
+
+/* ---------- confetti ---------- */
+function confetti(){
+  const cv=$("#confetti"), ctx=cv.getContext("2d");
+  cv.width=innerWidth; cv.height=innerHeight;
+  const colors=["#4f46e5","#7c3aed","#fbbf24","#22c55e","#ef4444","#06b6d4"];
+  const ps=Array.from({length:110},()=>({
+    x:Math.random()*cv.width, y:-20-Math.random()*cv.height*.4,
+    r:4+Math.random()*5, c:colors[Math.floor(Math.random()*colors.length)],
+    vy:2+Math.random()*3.5, vx:-1.5+Math.random()*3, a:Math.random()*6
+  }));
+  let f=0;
+  (function tick(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p=>{
+      p.y+=p.vy; p.x+=p.vx+Math.sin((f+p.a)/10); p.a+=.1;
+      ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,p.r,p.r*1.6);
+    });
+    if(++f<170) requestAnimationFrame(tick); else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+</script>
+</body>
+</html>

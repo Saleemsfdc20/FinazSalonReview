@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#be185d" />
+<title>Rate your experience - Finaaz The Beauty Salon & Aesthetics</title>
+
+<style>
+  /* =====================================================================
+     BRAND COLORS & LUXURY SALON THEME
+     ===================================================================== */
+  :root{
+    --brand:#be185d;        /* Rose-berry luxury salon brand color */
+    --brand-2:#831843;      /* Deep burgundy gradient accent */
+    --star:#fbbf24;         /* Star rating gold */
+    --ink:#0f172a;          /* Body text color */
+    --muted:#64748b;        /* Muted / secondary description text */
+    --line:#f1d5db;         /* Delicate rose border lines */
+    --bg:#fff1f2;           /* Soft rose-tinted warm background */
+    --card:#ffffff;         /* Main card background */
+    --ok:#16a34a;           /* Success green */
+    --radius:22px;          /* Card corner roundness */
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 500px at 50% -10%, rgba(190,24,93,.35), transparent 60%),
+      radial-gradient(900px 400px at 100% 0%, rgba(131,24,67,.30), transparent 60%),
+      var(--bg);
+    min-height:100vh;
+    display:flex;justify-content:center;
+    padding:max(18px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+  }
+  .wrap{width:100%;max-width:480px}
+
+  /* ---------- Header & Language Switcher ---------- */
+  .brand{
+    text-align:center;color:#fff;padding:20px 8px 65px;position:relative;
+  }
+  .lang-switch{
+    display:inline-flex;background:rgba(255,255,255,.22);backdrop-filter:blur(10px);
+    padding:3px;border-radius:999px;margin-bottom:14px;border:1px solid rgba(255,255,255,.4);
+  }
+  .lang-btn{
+    background:none;border:0;color:#fff;padding:5px 14px;border-radius:999px;
+    font-size:13px;font-weight:700;cursor:pointer;transition:.18s ease;font-family:inherit;
+  }
+  .lang-btn.active{
+    background:#fff;color:var(--brand);box-shadow:0 3px 8px rgba(0,0,0,.15);
+  }
+  .logo{
+    width:76px;height:76px;border-radius:50%;
+    margin:0 auto 12px;display:grid;place-items:center;
+    background:rgba(255,255,255,.20);
+    border:2.5px solid rgba(255,255,255,.6);
+    font-size:36px;font-weight:800;letter-spacing:-1px;
+    backdrop-filter:blur(6px);
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+  }
+  .logo img{width:100%;height:100%;object-fit:cover}
+  .brand h1{margin:0;font-size:23px;font-weight:800;letter-spacing:-.3px;line-height:1.25}
+  .brand p{margin:6px 0 0;opacity:.94;font-size:13.5px}
+
+  body::before{
+    content:"";position:fixed;inset:0 0 auto 0;height:320px;z-index:-1;
+    background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--card);border-radius:var(--radius);
+    box-shadow:0 20px 50px -12px rgba(131,24,67,.22);
+    padding:26px 22px 24px;margin-top:-48px;
+    animation:rise .45s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .screen{display:none;animation:fade .3s ease both}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  h2{margin:0 0 6px;font-size:21px;letter-spacing:-.2px;text-align:center}
+  .sub{margin:0 0 20px;color:var(--muted);font-size:14px;text-align:center;line-height:1.45}
+
+  /* ---------- Stars ---------- */
+  .stars{display:flex;justify-content:center;gap:6px;margin:8px 0 10px}
+  .star{
+    background:none;border:0;padding:4px;cursor:pointer;
+    font-size:46px;line-height:1;color:#e2e8f0;
+    transition:transform .15s ease, color .15s ease;
+  }
+  .star:hover{transform:scale(1.12)}
+  .star.on{color:var(--star);filter:drop-shadow(0 3px 6px rgba(251,191,36,.45))}
+  .star.pop{animation:pop .35s ease}
+  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.35) rotate(-8deg)}100%{transform:scale(1)}}
+  .star:focus-visible{outline:3px solid rgba(190,24,93,.5);border-radius:10px}
+  .rate-label{
+    text-align:center;font-weight:700;font-size:17px;height:26px;color:var(--brand);
+  }
+  .hint{text-align:center;color:var(--muted);font-size:12.5px;margin-top:14px}
+
+  /* ---------- Choice cards ---------- */
+  .chosen{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:#fff5f7;border:1px solid var(--line);border-radius:14px;
+    padding:10px 14px;margin-bottom:16px;font-size:14px;color:var(--muted);
+  }
+  .chosen b{color:var(--star);font-size:18px;letter-spacing:2px}
+  .chosen button{margin-left:auto;background:none;border:0;color:var(--brand);font-weight:700;cursor:pointer;font-size:13px}
+
+  .choice{
+    width:100%;text-align:left;display:flex;gap:14px;align-items:center;
+    background:#fff;border:1.5px solid var(--line);border-radius:18px;
+    padding:16px;margin-bottom:12px;cursor:pointer;font:inherit;color:inherit;
+    transition:.18s ease;
+  }
+  .choice:hover{border-color:var(--brand);box-shadow:0 8px 20px -10px rgba(190,24,93,.45);transform:translateY(-1px)}
+  .choice .ic{
+    flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;
+    background:linear-gradient(135deg,#fdf2f8,#fce7f3);
+  }
+  .choice strong{display:block;font-size:15.5px}
+  .choice span{display:block;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.35}
+  .choice .arrow{margin-left:auto;color:#cbd5e1;font-size:20px}
+
+  /* ---------- Chips ---------- */
+  .label{font-size:13px;font-weight:700;margin:4px 0 8px;display:block}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .chip{
+    border:1.5px solid var(--line);background:#fff;border-radius:999px;
+    padding:8px 13px;font-size:13.5px;cursor:pointer;font-family:inherit;color:var(--ink);
+    transition:.15s ease;
+  }
+  .chip:hover{border-color:var(--brand)}
+  .chip.on{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 4px 10px rgba(190,24,93,.3)}
+
+  /* ---------- Inputs ---------- */
+  textarea,input[type=text],input[type=tel]{
+    width:100%;font:inherit;font-size:15px;color:var(--ink);
+    border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;background:#fff;
+    outline:none;transition:.15s ease;resize:vertical;
+  }
+  textarea:focus,input:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(190,24,93,.12)}
+  textarea{min-height:130px;line-height:1.55}
+  .row{display:flex;gap:10px}
+  .row > *{flex:1}
+  .field{margin-bottom:12px}
+  .count{text-align:right;font-size:11.5px;color:var(--muted);margin-top:4px}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    width:100%;border:0;border-radius:14px;padding:15px 18px;font:inherit;font-weight:700;font-size:15.5px;
+    cursor:pointer;transition:.18s ease;display:flex;justify-content:center;align-items:center;gap:8px;
+  }
+  .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 10px 22px -8px rgba(190,24,93,.6)}
+  .btn.primary:hover{transform:translateY(-1px)}
+  .btn.primary:disabled{opacity:.45;cursor:not-allowed;transform:none}
+  .btn.ghost{background:#fff1f2;color:var(--brand);border:1px solid #fecdd3}
+  .btn.ghost:hover{background:#ffe4e6}
+  .btn.wa{background:#25d366;color:#fff}
+  .btn + .btn{margin-top:10px}
+  .back{background:none;border:0;color:var(--muted);font:inherit;font-size:13.5px;cursor:pointer;padding:0 0 12px}
+  .back:hover{color:var(--brand)}
+
+  .tip{
+    background:#fffbeb;border:1px solid #fde68a;color:#92400e;
+    border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.45;margin:12px 0 14px;
+  }
+  .steps{font-size:13px;color:var(--muted);line-height:1.6;margin:14px 0 0;padding-left:18px}
+
+  /* ---------- Thank you ---------- */
+  .done{text-align:center;padding:8px 0}
+  .tick{
+    width:84px;height:84px;border-radius:50%;margin:6px auto 16px;display:grid;place-items:center;
+    background:#dcfce7;color:var(--ok);font-size:44px;animation:pop .5s ease;
+  }
+
+  .toast{
+    position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);
+    background:#0f172a;color:#fff;padding:11px 18px;border-radius:999px;font-size:14px;
+    opacity:0;pointer-events:none;transition:.3s ease;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .foot{text-align:center;color:var(--muted);font-size:11.5px;margin-top:18px}
+
+  canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
+</style>
+</head>
+
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="wrap">
+
+  <header class="brand">
+    <!-- Language Toggle Switcher -->
+    <div class="lang-switch" id="langSwitch" role="group" aria-label="Language Select">
+      <button type="button" class="lang-btn active" data-lang="en">English</button>
+      <button type="button" class="lang-btn" data-lang="hi">हिंदी</button>
+      <button type="button" class="lang-btn" data-lang="mr">मराठी</button>
+    </div>
+
+    <div class="logo" id="logo">F</div>
+    <h1 id="bizName">Finaaz The Beauty Salon &amp; Aesthetics</h1>
+    <p id="bizTag">Exclusive Ladies Salon &amp; Aesthetics &bull; Mahim West</p>
+  </header>
+
+  <main class="card">
+
+    <!-- SCREEN 1: rating -->
+    <section class="screen active" id="s-rate">
+      <h2 id="t-rateTitle">How was your experience?</h2>
+      <p class="sub" id="t-rateSub">Tap a star to rate us. It takes less than a minute.</p>
+      <div class="stars" id="stars" role="radiogroup" aria-label="Rating"></div>
+      <div class="rate-label" id="rateLabel"></div>
+      <p class="hint" id="t-rateHint">Your rating helps us improve and helps others find us.</p>
+    </section>
+
+    <!-- SCREEN 2: choose how to share (IDENTICAL OPTIONS FOR ALL RATINGS) -->
+    <section class="screen" id="s-choose">
+      <div class="chosen">
+        <span id="t-yourRating">Your rating</span> <b id="chosenStars"></b>
+        <button id="changeRating">Change</button>
+      </div>
+      <h2 id="t-chooseTitle">How would you like to share it?</h2>
+      <p class="sub" id="t-chooseSub">Both options are open to you. Pick whichever suits you.</p>
+
+      <!-- Option A: Google Review -->
+      <button class="choice" id="goGoogle">
+        <div class="ic">🌍</div>
+        <div>
+          <strong id="t-optGoogleTitle">Review us on Google</strong>
+          <span id="t-optGoogleSub">Public review. We'll help you draft it, and you can edit every word.</span>
+        </div>
+        <div class="arrow">›</div>
+      </button>
+
+      <!-- Option B: Private Feedback -->
+      <button class="choice" id="goPrivate">
+        <div class="ic">💬</div>
+        <div>
+          <strong id="t-optPrivateTitle">Send private feedback</strong>
+          <span id="t-optPrivateSub">Goes straight to the owner so we can act on it quickly.</span>
+        </div>
+        <div class="arrow">›</div>
+      </button>
+    </section>
+
+    <!-- SCREEN 3: Google review helper -->
+    <section class="screen" id="s-google">
+      <button class="back" data-back="s-choose" id="t-backGoogle">← Back</button>
+      <h2 id="t-googleTitle">Write your Google review</h2>
+      <p class="sub" id="t-googleSub">Pick what stood out, then tweak the draft so it sounds like you.</p>
+
+      <span class="label"><span id="t-labelChips">What stood out?</span> <small style="font-weight:400;color:var(--muted)" id="t-opt1">(optional)</small></span>
+      <div class="chips" id="chips"></div>
+
+      <span class="label" id="t-labelDraft">Your review</span>
+      <textarea id="draft" maxlength="650" placeholder="Write your review here..."></textarea>
+      <div class="count"><span id="cnt">0</span>/650</div>
+
+      <div class="tip" id="t-tipGoogle">✍️ Please make sure the review reflects <b>your own genuine experience</b>. Edit the draft freely. Honest, personal reviews help other customers most.</div>
+
+      <div class="row">
+        <button class="btn ghost" id="shuffle">🔄 New draft</button>
+        <button class="btn ghost" id="copyOnly">📋 Copy</button>
+      </div>
+      <button class="btn primary" id="copyOpen" style="margin-top:10px">Copy &amp; open Google ➜</button>
+
+      <ol class="steps">
+        <li id="t-step1">Tap the button above. Your text is copied and Google opens.</li>
+        <li id="t-step2">Choose your star rating on Google and <b>paste</b> your review.</li>
+        <li id="t-step3">Tap <b>Post</b>. Thank you!</li>
+      </ol>
+    </section>
+
+    <!-- SCREEN 4: private feedback -->
+    <section class="screen" id="s-private">
+      <button class="back" data-back="s-choose" id="t-backPrivate">← Back</button>
+      <h2 id="t-privateTitle">Tell us privately</h2>
+      <p class="sub" id="t-privateSub">Your message goes straight to the owner. Nothing is posted publicly.</p>
+
+      <div class="field">
+        <span class="label" id="t-labelFb">Your feedback</span>
+        <textarea id="fbText" maxlength="800" placeholder="What went well? What could we do better?"></textarea>
+      </div>
+      <div class="row field">
+        <div>
+          <span class="label"><span id="t-labelName">Name</span> <small style="font-weight:400;color:var(--muted)" id="t-opt2">(optional)</small></span>
+          <input type="text" id="fbName" placeholder="Your name" autocomplete="name" />
+        </div>
+        <div>
+          <span class="label"><span id="t-labelPhone">Phone</span> <small style="font-weight:400;color:var(--muted)" id="t-opt3">(optional)</small></span>
+          <input type="tel" id="fbPhone" placeholder="So we can reach you" autocomplete="tel" inputmode="tel" />
+        </div>
+      </div>
+      <button class="btn primary" id="sendFb" disabled>Send feedback</button>
+    </section>
+
+    <!-- SCREEN 5: thank you -->
+    <section class="screen" id="s-done">
+      <div class="done">
+        <div class="tick">✓</div>
+        <h2 id="doneTitle">Thank you!</h2>
+        <p class="sub" id="doneMsg">We really appreciate your time.</p>
+        <button class="btn wa" id="waBtn" style="display:none">Also message us on WhatsApp</button>
+        <button class="btn ghost" id="again">Start over</button>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="foot" id="t-foot">Every rating gets the same options. No filtering, no pressure.</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   CONFIGURATION - Finaaz The Beauty Salon & Aesthetics
+   ===================================================================== */
+const CONFIG = {
+  BUSINESS_NAME     : "Finaaz The Beauty Salon & Aesthetics",
+  TAGLINE           : "Exclusive Ladies Salon & Aesthetics • Mahim West",
+  LOGO_URL          : "",   // optional: link or local filename to square logo image
+
+  // Direct Google Link
+  GOOGLE_REVIEW_URL : "https://share.google/x6GaBHQ43JT26xIuH",
+
+  // WhatsApp Number
+  WHATSAPP_NUMBER   : "918879340084",
+
+  // Google Sheet Web App URL (Google Apps Script)
+  FEEDBACK_ENDPOINT : ""
+};
+
+/* ---------- URL Parameter Overrides ---------- */
+(function(){
+  const p = new URLSearchParams(location.search);
+  if(p.get("name")) CONFIG.BUSINESS_NAME = p.get("name");
+  if(p.get("tag"))  CONFIG.TAGLINE = p.get("tag");
+  if(p.get("g"))    CONFIG.GOOGLE_REVIEW_URL = p.get("g");
+  if(p.get("wa"))   CONFIG.WHATSAPP_NUMBER = p.get("wa").replace(/\D/g,"");
+  if(p.get("logo")) CONFIG.LOGO_URL = p.get("logo");
+  if(p.get("ep"))   CONFIG.FEEDBACK_ENDPOINT = p.get("ep");
+  if(p.get("lang")) currentLang = p.get("lang");
+})();
+
+/* =====================================================================
+   SALON SPECIFIC TAGS (Localized)
+   ===================================================================== */
+const TAG_KEYS = ["NailsLash","HairSpa","SkinFacial","Staff","Hygiene","Privacy","Value"];
+
+let currentLang = "en";
+
+const I18N = {
+  en: {
+    rateTitle: "How was your experience?",
+    rateSub: "Tap a star to rate us. It takes less than a minute.",
+    rateHint: "Your rating helps us improve and helps other ladies find us.",
+    yourRating: "Your rating",
+    change: "Change",
+    chooseTitle: "How would you like to share it?",
+    chooseSub: "Both options are open to you. Pick whichever suits you.",
+    optGoogleTitle: "Review us on Google",
+    optGoogleSub: "Public review. We'll help you draft a unique review, and you can edit every word.",
+    optPrivateTitle: "Send private feedback",
+    optPrivateSub: "Goes straight to the owner so we can act on it quickly.",
+    back: "← Back",
+    googleTitle: "Write your Google review",
+    googleSub: "Pick what stood out, then tweak the draft so it sounds like you.",
+    labelChips: "What services/aspects stood out?",
+    optional: "(optional)",
+    labelDraft: "Your review (Unique draft ready)",
+    placeholderDraft: "Write your review here...",
+    tipGoogle: "✍️ Please make sure the review reflects <b>your own genuine experience</b>. Edit the draft freely. Honest reviews help other clients most.",
+    btnShuffle: "🔄 New draft",
+    btnCopyOnly: "📋 Copy",
+    btnCopyOpen: "Copy & open Google ➜",
+    step1: "Tap the button above. Your text is copied and Google opens.",
+    step2: "Choose your star rating on Google and <b>paste</b> your review.",
+    step3: "Tap <b>Post</b>. Thank you!",
+    privateTitle: "Tell us privately",
+    privateSub: "Your message goes straight to the owner. Nothing is posted publicly.",
+    labelFb: "Your feedback",
+    placeholderFb: "What went well? What could we do better?",
+    labelName: "Name",
+    placeholderName: "Your name",
+    labelPhone: "Phone",
+    placeholderPhone: "So we can reach you",
+    btnSendFb: "Send feedback",
+    btnSending: "Sending...",
+    doneGoogleTitle: "Thanks for sharing on Google!",
+    doneGoogleMsg: "Your words help other clients discover Finaaz. We really appreciate it!",
+    donePrivateTitle: "Thank you for telling us",
+    donePrivateMsg: "Your feedback has been shared with the owner and we will use it to improve.",
+    btnWa: "Also message us on WhatsApp",
+    btnAgain: "Start over",
+    foot: "Every rating gets the same options. Millions of distinct review drafts.",
+    toastCopied: "Copied to clipboard ✓ (Marked unique)",
+    toastManual: "Press and hold to copy",
+    toastCopiedOpen: "Copied! Paste it on Google ✓",
+    toastManualOpen: "Open Google, then paste your review",
+    labels: ["", "Poor", "Fair", "Good", "Great", "Exceptional"],
+    tags: {
+      NailsLash: "💅 Nails & Lashes",
+      HairSpa: "💇‍♀️ Hair & Spa",
+      SkinFacial: "✨ Hydrafacial & Skin",
+      Staff: "💖 Staff & Hospitality",
+      Hygiene: "🌿 Cleanliness & Hygiene",
+      Privacy: "🔒 Ladies Privacy & Vibe",
+      Value: "💎 Value & Results"
+    }
+  },
+  hi: {
+    rateTitle: "आपका अनुभव कैसा रहा?",
+    rateSub: "रेटिंग देने के लिए स्टार पर टैप करें। इसमें एक मिनट से भी कम समय लगता है।",
+    rateHint: "आपकी रेटिंग हमें सेवा बेहतर बनाने और अन्य महिलाओं को हमें ढूंढने में मदद करती है।",
+    yourRating: "आपकी रेटिंग",
+    change: "बदलें",
+    chooseTitle: "आप इसे कैसे साझा करना चाहेंगे?",
+    chooseSub: "दोनों विकल्प आपके लिए खुले हैं। जो आपको सही लगे उसे चुनें।",
+    optGoogleTitle: "Google पर रिव्यू लिखें",
+    optGoogleSub: "सार्वजनिक समीक्षा। हम एकदम अनोखा ड्राफ्ट तैयार करेंगे, आप बदलाव कर सकते हैं।",
+    optPrivateTitle: "निजी सुझाव भेजें",
+    optPrivateSub: "सीधे मालिक के पास जाता है ताकि हम तुरंत सुधार कर सकें।",
+    back: "← वापस",
+    googleTitle: "अपना Google रिव्यू लिखें",
+    googleSub: "जो खास लगा उसे चुनें, फिर ड्राफ्ट को अपने अनुसार बदलें।",
+    labelChips: "क्या खास रहा? (सर्विस चुनें)",
+    optional: "(वैकल्पिक)",
+    labelDraft: "आपकी समीक्षा (अनोखा ड्राफ्ट)",
+    placeholderDraft: "अपनी समीक्षा यहाँ लिखें...",
+    tipGoogle: "✍️ कृपया सुनिश्चित करें कि समीक्षा आपके <b>वास्तविक अनुभव</b> को दर्शाती है। व्यक्तिगत और ईमानदार समीक्षा दूसरों की सबसे अधिक मदद करती है।",
+    btnShuffle: "🔄 नया ड्राफ्ट",
+    btnCopyOnly: "📋 कॉपी करें",
+    btnCopyOpen: "कॉपी करें और Google खोलें ➜",
+    step1: "ऊपर दिए गए बटन पर टैप करें। टेक्स्ट कॉपी हो जाएगा और Google खुलेगा।",
+    step2: "Google पर स्टार चुनें और अपना रिव्यू <b>पेस्ट</b> करें।",
+    step3: "<b>Post</b> पर टैप करें। धन्यवाद!",
+    privateTitle: "हमें निजी तौर पर बताएं",
+    privateSub: "आपका संदेश सीधे मालिक तक पहुंचेगा। इसे सार्वजनिक नहीं किया जाएगा।",
+    labelFb: "आपका सुझाव",
+    placeholderFb: "क्या अच्छा लगा? हम क्या बेहतर कर सकते हैं?",
+    labelName: "नाम",
+    placeholderName: "आपका नाम",
+    labelPhone: "फ़ोन",
+    placeholderPhone: "ताकि हम संपर्क कर सकें",
+    btnSendFb: "फीडबैक भेजें",
+    btnSending: "भेजा जा रहा है...",
+    doneGoogleTitle: "Google पर साझा करने के लिए धन्यवाद!",
+    doneGoogleMsg: "आपकी समीक्षा अन्य ग्राहकों को Finaaz ढूंढने में मदद करती है। दिल से धन्यवाद!",
+    donePrivateTitle: "सुझाव देने के लिए धन्यवाद",
+    donePrivateMsg: "आपका सुझाव मालिक तक पहुंचा दिया गया है। हम इस पर अवश्य काम करेंगे।",
+    btnWa: "व्हाट्सएप पर भी संदेश भेजें",
+    btnAgain: "फिर से शुरू करें",
+    foot: "हर रेटिंग के लिए समान विकल्प। लाखों अनोखे रिव्यू ड्राफ्ट्स।",
+    toastCopied: "क्लिपबोर्ड पर कॉपी किया गया ✓ (यूनिक दर्ज)",
+    toastManual: "कॉपी करने के लिए दबाकर रखें",
+    toastCopiedOpen: "कॉपी हो गया! Google पर पेस्ट करें ✓",
+    toastManualOpen: "Google खोलें और रिव्यू पेस्ट करें",
+    labels: ["", "खराब", "साधारण", "अच्छा", "बहुत बढ़िया", "उत्कृष्ट"],
+    tags: {
+      NailsLash: "💅 नेल आर्ट & लैशेस",
+      HairSpa: "💇‍♀️ हेयर & स्पा",
+      SkinFacial: "✨ फेशियल & ग्लो",
+      Staff: "💖 स्टाफ & सर्विस",
+      Hygiene: "🌿 सफाई & हाइजीन",
+      Privacy: "🔒 प्राइवेसी & माहौल",
+      Value: "💎 पैसे का पूरा मूल्य"
+    }
+  },
+  mr: {
+    rateTitle: "तुमचा अनुभव कसा होता?",
+    rateSub: "आम्हाला रेट करण्यासाठी स्टारवर टॅप करा. यास एका मिनिटापेक्षा कमी वेळ लागतो.",
+    rateHint: "तुमचे रेटिंग आम्हाला सुधारणा करण्यास आणि इतर महिलांना आम्हाला शोधण्यास मदत करते.",
+    yourRating: "तुमचे रेटिंग",
+    change: "बदला",
+    chooseTitle: "तुम्हाला हा अनुभव कसा शेअर करायचा आहे?",
+    chooseSub: "दोन्ही पर्याय तुमच्यासाठी खुले आहेत. जो तुम्हाला सोयीचा वाटेल तो निवडा.",
+    optGoogleTitle: "Google वर रिव्ह्यू लिहा",
+    optGoogleSub: "सार्वजनिक रिव्ह्यू. आम्ही एक अनोखा मसुदा तयार करू, तुम्ही हवा तसा बदल करू शकता.",
+    optPrivateTitle: "खाजगी अभिप्राय पाठवा",
+    optPrivateSub: "थेट मालकाकडे जातो जेणेकरून आम्ही त्यावर त्वरित सुधारणा करू शकू.",
+    back: "← मागे",
+    googleTitle: "तुमचा Google रिव्ह्यू लिहा",
+    googleSub: "जे विशेष वाटले ते निवडा, नंतर मसुद्यात तुमच्यानुसार बदल करा.",
+    labelChips: "काय विशेष वाटले? (सेवा निवडा)",
+    optional: "(पर्यायी)",
+    labelDraft: "तुमचा रिव्ह्यू (अनोखा मसुदा)",
+    placeholderDraft: "तुमचा रिव्ह्यू येथे लिहा...",
+    tipGoogle: "✍️ कृपया खात्री करा की रिव्ह्यू तुमच्या <b>प्रत्यक्ष अनुभवावर</b> आधारित आहे. प्रामाणिक रिव्ह्यू इतर ग्राहकांना सर्वाधिक मदत करतात.",
+    btnShuffle: "🔄 नवीन मसुदा",
+    btnCopyOnly: "📋 कॉपी करा",
+    btnCopyOpen: "कॉपी करा आणि Google उघडा ➜",
+    step1: "वरील बटणावर टॅप करा. मजकूर कॉपी होईल आणि Google उघडेल.",
+    step2: "Google वर तुमचे स्टार रेटिंग निवडा आणि रिव्ह्यू <b>पेस्ट</b> करा.",
+    step3: "<b>Post</b> वर टॅप करा. धन्यवाद!",
+    privateTitle: "आम्हाला खाजगीरित्या सांगा",
+    privateSub: "तुमचा संदेश थेट मालकापर्यंत पोहोचेल. काहीही सार्वजनिकरित्या पोस्ट केले जात नाही.",
+    labelFb: "तुमचा अभिप्राय",
+    placeholderFb: "काय आवडले? आम्ही काय अधिक चांगले करू शकतो?",
+    labelName: "नाव",
+    placeholderName: "तुमचे नाव",
+    labelPhone: "फोन",
+    placeholderPhone: "आम्ही संपर्क करू शकू म्हणून",
+    btnSendFb: "अभिप्राय पाठवा",
+    btnSending: "पाठवत आहे...",
+    doneGoogleTitle: "Google वर शेअर केल्याबद्दल धन्यवाद!",
+    doneGoogleMsg: "तुमचा रिव्ह्यू इतर महिलांना Finaaz शोधण्यात मदत करतो. मनःपूर्वक धन्यवाद!",
+    donePrivateTitle: "अभिप्राय दिल्याबद्दल धन्यवाद",
+    donePrivateMsg: "तुमचा अभिप्राय थेट मालकापर्यंत पोहोचवला आहे. आम्ही त्यावर सुधारणा करू.",
+    btnWa: "व्हॉट्सॲपवरही मेसेज पाठवा",
+    btnAgain: "पुन्हा सुरू करा",
+    foot: "प्रत्येक रेटिंगसाठी समान पर्याय. लाखो अनोखे मसुदे.",
+    toastCopied: "क्लिपबोर्डवर कॉपी केले ✓ (युनिक नोंदणीकृत)",
+    toastManual: "कॉपी करण्यासाठी दाबून ठेवा",
+    toastCopiedOpen: "कॉपी झाले! Google वर पेस्ट करा ✓",
+    toastManualOpen: "Google उघडा आणि रिव्ह्यू पेस्ट करा",
+    labels: ["", "वाईट", "साधारण", "चांगला", "खूप छान", "उत्कृष्ट"],
+    tags: {
+      NailsLash: "💅 नेल आर्ट आणि लॅशेस",
+      HairSpa: "💇‍♀️ हेअर आणि स्पा",
+      SkinFacial: "✨ फेशिअल आणि ग्लो",
+      Staff: "💖 कर्मचारी आणि सेवा",
+      Hygiene: "🌿 स्वच्छता आणि हायजीन",
+      Privacy: "🔒 गोपनीयता आणि वातावरण",
+      Value: "💎 पैशांचे पूर्ण समाधान"
+    }
+  }
+};
+
+/* =====================================================================
+   MASSIVE COMBINATORIAL REVIEW ENGINE (Millions of Unique Combinations)
+   ===================================================================== */
+const DRAFTS_DB = {
+  en: {
+    OPEN: {
+      pos: [
+        "Had a wonderful pampering session at {biz} in Mahim.",
+        "Visited {biz} recently and I must say I was thoroughly impressed.",
+        "Such a fantastic experience at {biz}!",
+        "I rarely write reviews, but my visit to {biz} truly deserved one.",
+        "Had an amazing appointment at {biz} this week.",
+        "Truly delighted with my experience at {biz}.",
+        "Finding a great ladies salon is hard, but {biz} exceeded all my expectations.",
+        "Loved everything about my visit to {biz}.",
+        "My visit to {biz} was so relaxing and refreshing.",
+        "Had a great self-care day at {biz}.",
+        "Booked an appointment at {biz} based on recommendations, and it was 100% worth it.",
+        "Came to {biz} for some beauty services and left feeling so pampered.",
+        "Easily one of the best beauty salons for women in Mahim.",
+        "From the moment I stepped into {biz}, the experience was top-notch.",
+        "Really impressed by the standard of service at {biz}.",
+        "Had a very pleasant and satisfying visit to {biz}.",
+        "A truly professional and welcoming salon experience at {biz}.",
+        "So glad I decided to try {biz}!"
+      ],
+      mid: [
+        "Visited {biz} in Mahim recently.",
+        "My appointment at {biz} was decent overall.",
+        "Stopped by {biz} for some beauty care.",
+        "Had an okay experience during my visit to {biz}.",
+        "Tried {biz} for the first time this week."
+      ],
+      neg: [
+        "My visit to {biz} was disappointing.",
+        "Unfortunately my experience at {biz} didn't match expectations.",
+        "I was expecting much better service at {biz}."
+      ]
+    },
+    DETAIL: {
+      NailsLash: {
+        pos: [
+          "The nail art and extension work was done with incredible precision and care.",
+          "Got my nails and lash lift done, and the finish looks so elegant and natural.",
+          "The technician took her time with my nail extensions and the result is stunning.",
+          "Super happy with the lash extensions; they feel lightweight and look gorgeous.",
+          "Their nail art designs are very creative and done with top quality products."
+        ],
+        mid: [
+          "The nail service was okay, though took a little longer than expected.",
+          "Nail work was decent, but could have had a cleaner finish."
+        ],
+        neg: [
+          "The nail extensions didn't last as long as expected.",
+          "Was not satisfied with the finish on my nails."
+        ]
+      },
+      HairSpa: {
+        pos: [
+          "The hair spa treatment left my hair feeling silky smooth, deeply nourished, and frizz-free.",
+          "The head massage during the hair spa was deeply relaxing and melted away all stress.",
+          "Loved how they analyzed my hair texture before recommending the right treatment.",
+          "Their hair styling and treatment made my hair look healthy and shiny.",
+          "The hair care ritual was rejuvenating and done very gently."
+        ],
+        mid: [
+          "The hair spa was average, felt similar to regular salon treatments.",
+          "Hair felt fine, though the massage could have been a bit more thorough."
+        ],
+        neg: [
+          "Did not see much difference in my hair after the treatment.",
+          "The hair wash and spa was rushed."
+        ]
+      },
+      SkinFacial: {
+        pos: [
+          "The hydrafacial treatment gave my skin an instant radiant glow that lasted for days.",
+          "My skin felt deeply cleansed, hydrated, and glowing right after the facial.",
+          "They tailored the facial steps according to my sensitive skin type with utmost care.",
+          "The aesthetic skin treatment was so gentle and visibly improved skin clarity.",
+          "One of the best facials I have had; my face feels so supple and rejuvenated."
+        ],
+        mid: [
+          "The facial was standard and refreshing, though effects were mild.",
+          "Skin felt clean, but nothing out of the ordinary."
+        ],
+        neg: [
+          "The facial was not suited for my skin type and caused minor irritation.",
+          "Did not find the skin treatment effective."
+        ]
+      },
+      Staff: {
+        pos: [
+          "The staff was incredibly polite, attentive, and genuinely cared about my comfort.",
+          "The team is well-trained, gentle, and explained every step of the procedure patiently.",
+          "Courteous staff who make you feel completely welcomed without pushing unnecessary products.",
+          "Special thanks to the staff for their patience and warm hospitality.",
+          "The beauticians are skilled professionals who know their craft thoroughly."
+        ],
+        mid: [
+          "The staff was polite, though they seemed a bit busy and occupied.",
+          "Service from the staff was okay, could be a bit more attentive."
+        ],
+        neg: [
+          "Staff seemed inattentive and could have been more welcoming.",
+          "The staff behavior could be improved."
+        ]
+      },
+      Hygiene: {
+        pos: [
+          "Hygiene standards are exemplary, with sanitized tools and fresh disposables used throughout.",
+          "The salon is spotless, clean, and maintained with hospital-grade sanitization.",
+          "Felt completely safe seeing their strict sterilization of all metal equipment.",
+          "Impeccable cleanliness in every corner, which is very reassuring.",
+          "Very high hygiene standards, which is a big reason I will keep coming back."
+        ],
+        mid: [
+          "Cleanliness was adequate, but workstation could have been tidier.",
+          "Hygiene was decent overall."
+        ],
+        neg: [
+          "Cleanliness standards definitely need more attention.",
+          "The workstation was not as clean as expected."
+        ]
+      },
+      Privacy: {
+        pos: [
+          "Being a dedicated women-only salon gave complete peace of mind, privacy, and relaxation.",
+          "The serene ambience and private, modest environment made the whole visit so comfortable.",
+          "Loved the tranquil atmosphere; no outside distractions, just pure pampering.",
+          "The ladies-only privacy is such a blessing and makes you feel right at home.",
+          "A calm, cozy aesthetic with a soothing vibe throughout."
+        ],
+        mid: [
+          "Ambience was fine, though it got slightly noisy during peak hours.",
+          "The environment was okay."
+        ],
+        neg: [
+          "The atmosphere was cramped and lacked relaxation.",
+          "Expected a much more peaceful ambience."
+        ]
+      },
+      Value: {
+        pos: [
+          "Completely worth every single rupee spent for this level of luxury and care.",
+          "Very reasonably priced considering the high quality of products and aesthetics offered.",
+          "Great value for money; you genuinely leave feeling pampered and satisfied.",
+          "Premium services at honest and transparent prices.",
+          "Felt like a 5-star experience without exorbitant charges."
+        ],
+        mid: [
+          "Pricing is moderate, reasonably balanced with what is delivered.",
+          "Fair prices, though a few services felt on the higher side."
+        ],
+        neg: [
+          "Felt overpriced for the quality of service received.",
+          "Did not feel good value for money."
+        ]
+      }
+    },
+    GENERIC: {
+      pos: [
+        "The overall experience from start to finish was completely seamless.",
+        "Everything was handled professionally with great attention to every small detail.",
+        "Left the salon looking and feeling my absolute best.",
+        "Consistently delivering wonderful beauty care every single time."
+      ],
+      mid: [
+        "Overall a fair experience with some good aspects.",
+        "A decent salon visit with a few areas that can improve."
+      ],
+      neg: [
+        "Hoping management looks into these points and makes improvements.",
+        "Needs better consistency in service quality."
+      ]
+    },
+    CLOSE: {
+      pos: [
+        "Highly recommended to all ladies in Mumbai!",
+        "Definitely coming back for my next appointment soon.",
+        "Will be recommending {biz} to all my friends and family.",
+        "Thank you to the entire team for such a pampering visit!",
+        "Easily my new go-to salon in Mahim. 10/10!",
+        "Keep up the great work! Can't wait for my next session.",
+        "Worth every visit, truly exceptional!",
+        "Already looking forward to coming back here."
+      ],
+      mid: [
+        "Hoping to see even better service on my next visit.",
+        "Decent place, might visit again.",
+        "An okay option in the area."
+      ],
+      neg: [
+        "Hope they take this constructive feedback seriously.",
+        "Would consider returning only if service improves."
+      ]
+    }
+  },
+
+  hi: {
+    OPEN: {
+      pos: [
+        "{biz} (माहिम) में मेरा अनुभव वाकई बहुत शानदार रहा।",
+        "हाल ही में {biz} गई थी और यहाँ की सर्विस से मैं बेहद खुश हूँ।",
+        "{biz} में सेल्फ-केयर और ब्यूटी सेशन बहुत ही आरामदायक रहा।",
+        "{biz} ने मेरी उम्मीदों से कहीं बेहतर सेवा दी।",
+        "माहिम में महिलाओं के लिए {biz} जैसा बढ़िया सैलून मिलना बहुत खुशी की बात है।",
+        "{biz} में बिताया गया समय बहुत ही सुकून भरा और रिफ्रेशिंग रहा।",
+        "{biz} आकर लगा कि यहाँ वाकई ग्राहकों का खास ख्याल रखा जाता है।",
+        "मैंने पहली बार {biz} ट्राई किया और यह अनुभव लाजवाब रहा।"
+      ],
+      mid: [
+        "हाल ही में {biz} गई थी, अनुभव कुल मिलाकर सामान्य रहा।",
+        "{biz} में अनुभव ठीक-ठाक था।",
+        "माहिम में {biz} का मेरा दौरा ठीक रहा।"
+      ],
+      neg: [
+        "{biz} में मेरा अनुभव निराशाजनक रहा।",
+        "दुर्भाग्य से {biz} मेरी उम्मीदों पर खरा नहीं उतरा।"
+      ]
+    },
+    DETAIL: {
+      NailsLash: {
+        pos: [
+          "नेल आर्ट और एक्सटेंशन का काम बहुत ही फिनिशिंग और बारीकी से किया गया।",
+          "लैशेस और नेल केयर बहुत ही नेचुरल और खूबसूरत लग रहे हैं।",
+          "नेल आर्टिस्ट बहुत कुशल हैं और उन्होंने मनपसंद डिजाइन तैयार किया।"
+        ],
+        mid: ["नेल्स का काम ठीक था, थोड़ा और समय दिया जा सकता था।"],
+        neg: ["नेल एक्सटेंशन की क्वालिटी वैसी नहीं रही जैसी उम्मीद थी।"]
+      },
+      HairSpa: {
+        pos: [
+          "हेयर स्पा के बाद मेरे बाल बेहद मुलायम, चमकदार और मैनेजेबल हो गए हैं।",
+          "हेयर मसाज बहुत ही सुकून देने वाला था, सारा तनाव दूर हो गया।",
+          "बालों की जरूरत समझकर उन्होंने सही ट्रीटमेंट दिया।"
+        ],
+        mid: ["हेयर स्पा सामान्य था, जैसा आमतौर पर होता है।"],
+        neg: ["हेयर स्पा का कोई खास असर नहीं दिखा।"]
+      },
+      SkinFacial: {
+        pos: [
+          "हाइड्राफेशियल ट्रीटमेंट के बाद चेहरे पर तुरंत नेचुरल ग्लो आ गया।",
+          "मेरी सेंसिटिव स्किन के अनुसार बहुत ही कोमलता से फेशियल किया गया।",
+          "स्किन बहुत फ्रेश, क्लीन और हाइड्रेटेड महसूस हो रही है।"
+        ],
+        mid: ["फेशियल ठीक था, हल्की ताजगी महसूस हुई।"],
+        neg: ["स्किन ट्रीटमेंट से कोई खास फायदा नहीं हुआ।"]
+      },
+      Staff: {
+        pos: [
+          "स्टाफ का व्यवहार बहुत ही विनम्र, सहयोगी और आदरपूर्ण रहा।",
+          "पूरी टीम बहुत ट्रेंड और प्रोफेशनल है, हर बात तसल्ली से समझाई।",
+          "यहाँ की टीम हर ग्राहक को बहुत कम्फर्टेबल महसूस कराती है।"
+        ],
+        mid: ["स्टाफ ठीक था, पर थोड़ा और ध्यान दे सकते थे।"],
+        neg: ["स्टाफ का रवैया और बेहतर होना चाहिए था।"]
+      },
+      Hygiene: {
+        pos: [
+          "सफाई और हाइजीन का बहुत ही उच्च स्तर रखा गया है, सभी टूल्स पूरी तरह सैनिटाइज्ड थे।",
+          "सैलून एकदम साफ-सुथरा और हाइजीनिक है, जिससे पूरा भरोसा मिलता है।",
+          "डिस्पोजेबल शीट्स और स्टेराइल उपकरणों का उपयोग देखकर बहुत अच्छा लगा।"
+        ],
+        mid: ["सफाई ठीक थी, थोड़ा और ध्यान दिया जा सकता है।"],
+        neg: ["सफाई व्यवस्था पर ध्यान देने की जरूरत है।"]
+      },
+      Privacy: {
+        pos: [
+          "पूरी तरह महिलाओं के लिए आरक्षित (Ladies-only) होने से पूरी प्राइवेसी और सुकून मिलता है।",
+          "माहौल बहुत ही शांत, सुरक्षित और आरामदायक है।",
+          "यहाँ की शांति और माहौल में बैठना बहुत ही सुकूनदायक है।"
+        ],
+        mid: ["माहौल ठीक था, कभी-कभार थोड़ी हलचल ज्यादा थी।"],
+        neg: ["माहौल उतना शांत नहीं लगा।"]
+      },
+      Value: {
+        pos: [
+          "पैसे का पूरा मूल्य मिला (Full value for money), हर रुपया वसूल है।",
+          "प्रीमियम क्वालिटी की सर्विसेज बहुत ही वाजिब दामों में मिलीं।",
+          "इतनी बेहतरीन क्वालिटी के लिए रेट्स बिल्कुल सही हैं।"
+        ],
+        mid: ["कीमतें ठीक-ठाक हैं, बहुत ज्यादा नहीं।"],
+        neg: ["सर्विस के हिसाब से पैसे ज्यादा लगे।"]
+      }
+    },
+    GENERIC: {
+      pos: [
+        "शुरुआत से अंत तक सारा अनुभव बहुत ही बेहतरीन रहा।",
+        "हर सर्विस में प्रोफेशनल टच साफ दिखाई देता है।"
+      ],
+      mid: ["कुल मिलाकर अनुभव सामान्य रहा।"],
+      neg: ["उम्मीद है कि प्रबंधन इन बातों पर ध्यान देगा।"]
+    },
+    CLOSE: {
+      pos: [
+        "सभी महिलाओं को यहाँ आने की दिल से सलाह दूंगी!",
+        "मैं दोबारा जरूर आऊंगी, थैंक यू {biz} टीम!",
+        "माहिम में ब्यूटी और पैम्परिंग के लिए सबसे बेहतरीन जगह!",
+        "5 स्टार सर्विस, कीप इट अप!"
+      ],
+      mid: ["अगली बार और बेहतर अनुभव की उम्मीद है।"],
+      neg: ["कृपया इस फीडबैक पर ध्यान देकर सुधार करें।"]
+    }
+  },
+
+  mr: {
+    OPEN: {
+      pos: [
+        "{biz} (माहिम) मध्ये माझा अनुभव अतिशय सुखद आणि उत्तम राहिला.",
+        "नुकतीच {biz} ला भेट दिली आणि मला मिळालेली सेवा खरंच कौतुकास्पद आहे.",
+        "{biz} मध्ये स्वतःची काळजी घेण्यासाठी घालवलेला वेळ खूपच छान ठरला.",
+        "माहिममध्ये महिलांसाठी {biz} सारखा सुरक्षित आणि दर्जेदार सलून असणे खूप छान आहे.",
+        "{biz} कडून खूपच उत्तम आणि समाधानकारक सेवा मिळाली.",
+        "पहिल्यांदाच {biz} मध्ये गेले होते, आणि सेवा अपेक्षेपेक्षा जास्त सुंदर होती."
+      ],
+      mid: [
+        "नुकतीच {biz} ला भेट दिली, अनुभव सरासरी राहिला.",
+        "{biz} मधील अनुभव ठीकठाक होता."
+      ],
+      neg: [
+        "{biz} मधील अनुभव निराशाजनक होता.",
+        "दुर्दैवाने {biz} कडून अपेक्षित दर्जा मिळाला नाही."
+      ]
+    },
+    DETAIL: {
+      NailsLash: {
+        pos: [
+          "नेल आर्ट आणि एक्स्टेंशनचे काम अतिशय बारकाईने आणि सुबक केले गेले.",
+          "लॅशेस आणि नेल डिझाईन्स खूपच नैसर्गिक आणि आकर्षक दिसत आहेत.",
+          "नेल आर्टिस्टने अतिशय कौशल्याने आणि सुंदर काम केले."
+        ],
+        mid: ["नेल्सचे काम ठीक होते, अजून फिनिशिंग हवी होती."],
+        neg: ["नेल एक्स्टेंशन फार काळ टिकले नाही."]
+      },
+      HairSpa: {
+        pos: [
+          "हेअर स्पा नंतर केस मऊ, चमकदार आणि निरोगी वाटत आहेत.",
+          "हेड मसाज अतिशय आरामदायी होता, संपूर्ण थकवा नाहीसा झाला.",
+          "केसांचा प्रकार ओळखून योग्य ट्रीटमेंट दिली गेली."
+        ],
+        mid: ["हेअर स्पा सर्वसाधारण होता."],
+        neg: ["हेअर ट्रीटमेंटचा विशेष फरक जाणवला नाही."]
+      },
+      SkinFacial: {
+        pos: [
+          "हायड्राफेशिअल ट्रीटमेंटमुळे त्वचेला लगेचच सुंदर ग्लो आणि ताजेतवानेपणा आला.",
+          "त्वचेची काळजी घेऊन अत्यंत कोमलतेने फेशिअल करण्यात आले.",
+          "चेहरा अतिशय स्वच्छ आणि हायड्रेटेड वाटतो आहे."
+        ],
+        mid: ["फेशिअल ठीक होते, थोडा ताजेपणा जाणवला."],
+        neg: ["त्वचेच्या ट्रीटमेंटने अपेक्षित परिणाम दिला नाही."]
+      },
+      Staff: {
+        pos: [
+          "कर्मचाऱ्यांचे वर्तन अत्यंत नम्र, मनमिळाऊ आणि आदरयुक्त होते.",
+          "सर्व कर्मचारी प्रशिक्षित आहेत आणि प्रत्येक टप्पा नीट समजावून सांगतात.",
+          "येथील टीम प्रत्येक ग्राहकाला पूर्ण कम्फर्ट आणि आदर देते."
+        ],
+        mid: ["कर्मचारी ठीक होते, पण अजून लक्ष द्यायला हवे होते."],
+        neg: ["कर्मचाऱ्यांचे वर्तन अधिक सहकार्यपूर्ण असायला हवे होते."]
+      },
+      Hygiene: {
+        pos: [
+          "स्वच्छता आणि हायजीनचे अतिशय काटेकोर पालन केले जाते, सर्व साधने सॅनिटाइज्ड होती.",
+          "सलून अतिशय स्वच्छ आणि व्यवस्थित ठेवलेला आहे, ज्यामुळे पूर्ण सुरक्षित वाटते.",
+          "डिस्पोजेबल शीट्स आणि निर्जंतुक उपकरणे पाहून खूप समाधान वाटले."
+        ],
+        mid: ["स्वच्छता साधारण होती, अजून सुधारणा करता येईल."],
+        neg: ["स्वच्छतेकडे विशेष लक्ष देण्याची गरज आहे."]
+      },
+      Privacy: {
+        pos: [
+          "फक्त महिलांसाठी राखीव (Ladies-only) असल्यामुळे पूर्ण गोपनीयता आणि सुरक्षितता जाणवते.",
+          "वातावरण शांत, प्रसन्न आणि अतिशय आरामदायी आहे.",
+          "कोणताही बाहेरील व्यत्यय न येता निवांतपणे सेवा घेता आली."
+        ],
+        mid: ["वातावरण सर्वसाधारण होते."],
+        neg: ["वातावरण तितकेसे शांत नव्हते."]
+      },
+      Value: {
+        pos: [
+          "दिलेल्या पैशांचे पूर्ण समाधान मिळाले (Value for money).",
+          "उत्कृष्ट दर्जाच्या सेवा अतिशय रास्त आणि वाजवी दरात उपलब्ध आहेत.",
+          "खर्चाच्या तुलनेत मिळालेली सेवा खूपच उच्च दर्जाची आहे."
+        ],
+        mid: ["दर साधारण आहेत."],
+        neg: ["दरांच्या तुलनेत सेवा पुरेशी वाटली नाही."]
+      }
+    },
+    GENERIC: {
+      pos: [
+        "सुरुवातीपासून शेवटपर्यंतचा सर्व अनुभव अतिशय सुंदर राहिला.",
+        "प्रत्येक कामात व्यावसायिक कौशल्य स्पष्ट दिसते."
+      ],
+      mid: ["एकंदरीत सरासरी अनुभव राहिला."],
+      neg: ["व्यवस्थापनाने या बाबींवर लक्ष देऊन सुधारणा करावी."]
+    },
+    CLOSE: {
+      pos: [
+        "माहिममधील सर्व महिलांना मी नक्की शिफारस करेन!",
+        "मी पुन्हा नक्की भेट देईन, खूप खूप धन्यवाद {biz}!",
+        "महिलांसाठी उत्कृष्ट आणि खात्रीशीर सलून!",
+        "नक्कीच ५ स्टार्स देण्यासारखी सेवा!"
+      ],
+      mid: ["पुढच्या वेळी आणखी चांगल्या सेवेची अपेक्षा आहे."],
+      neg: ["कृपया या अभिप्रायाची नोंद घेऊन सुधारणा करावी."]
+    }
+  }
+};
+
+/* =====================================================================
+   GLOBAL DE-DUPLICATION ENGINE
+   Tracks every copied review on server & local device so no 2 people
+   ever receive the same review!
+   ===================================================================== */
+const GLOBAL_USED_HASHES = new Set();
+
+function hashText(str){
+  let h = 5381;
+  for(let i=0; i<str.length; i++) h = ((h << 5) + h) + str.charCodeAt(i);
+  return (h >>> 0).toString(36);
+}
+
+// Fetch already-used hashes from the local server
+async function syncUsedReviews(){
+  try {
+    const res = await fetch('/api/used-reviews');
+    if(res.ok) {
+      const arr = await res.json();
+      if(Array.isArray(arr)) {
+        arr.forEach(h => GLOBAL_USED_HASHES.add(h));
+      }
+    }
+  } catch(e) {
+    // Offline or static fallback: use local storage cache
+  }
+  try {
+    const local = JSON.parse(localStorage.getItem('finaaz_copied_hashes') || '[]');
+    local.forEach(h => GLOBAL_USED_HASHES.add(h));
+  } catch(e) {}
+}
+
+async function markReviewUsed(txt){
+  const h = hashText(txt);
+  GLOBAL_USED_HASHES.add(h);
+
+  // 1. Save to localStorage
+  try {
+    const local = JSON.parse(localStorage.getItem('finaaz_copied_hashes') || '[]');
+    local.push(h);
+    localStorage.setItem('finaaz_copied_hashes', JSON.stringify(local.slice(-5000)));
+  } catch(e) {}
+
+  // 2. Notify the server backend
+  try {
+    await fetch('/api/mark-used', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hash: h, text: txt })
+    });
+  } catch(e) {}
+}
+
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const bucket = r => r>=4 ? "pos" : r===3 ? "mid" : "neg";
+
+/* Build a unique, non-repeating draft using 6 randomized templates */
+function buildDraft(rating, tags){
+  const langPack = DRAFTS_DB[currentLang] || DRAFTS_DB.en;
+  const b = bucket(rating);
+
+  // If no tag selected, pick 2-3 tags randomly to make every draft full and rich
+  let activeTags = tags.length ? [...tags] : [...TAG_KEYS].sort(()=>Math.random()-.5).slice(0, 3);
+
+  let bestDraft = "";
+  // Attempt up to 50 randomized permutations until a never-before-used combination is found
+  for(let attempt = 0; attempt < 50; attempt++){
+    const opener = pick(langPack.OPEN[b]).replace("{biz}", CONFIG.BUSINESS_NAME);
+    const closer = pick(langPack.CLOSE[b]).replace("{biz}", CONFIG.BUSINESS_NAME);
+
+    // Pick 1-2 tag details
+    const tagSentences = [];
+    const shuffledTags = [...activeTags].sort(()=>Math.random()-.5);
+    shuffledTags.slice(0, 2).forEach(t => {
+      if(langPack.DETAIL[t] && langPack.DETAIL[t][b]){
+        tagSentences.push(pick(langPack.DETAIL[t][b]));
+      }
+    });
+
+    // Assemble dynamic templates
+    const templateType = Math.floor(Math.random() * 5);
+    let parts = [];
+
+    if(templateType === 0){
+      // Opener -> Details -> Generic -> Close
+      parts = [opener, ...tagSentences, pick(langPack.GENERIC[b]), closer];
+    } else if(templateType === 1){
+      // Opener -> Details -> Close
+      parts = [opener, ...tagSentences, closer];
+    } else if(templateType === 2){
+      // Details first -> Opener reflection -> Close
+      parts = [tagSentences[0] || opener, opener, tagSentences[1] || pick(langPack.GENERIC[b]), closer];
+    } else if(templateType === 3){
+      // Opener -> Privacy/Staff focus -> Details -> Close
+      const privacyPart = langPack.DETAIL.Privacy ? pick(langPack.DETAIL.Privacy[b]) : "";
+      parts = [opener, privacyPart, ...tagSentences, closer].filter(Boolean);
+    } else {
+      // Opener -> Generic -> Details -> Close
+      parts = [opener, pick(langPack.GENERIC[b]), ...tagSentences, closer];
+    }
+
+    const candidate = parts.join(" ");
+    const candHash = hashText(candidate);
+
+    // Ensure this draft has NEVER been copied by anyone
+    if(!GLOBAL_USED_HASHES.has(candHash)){
+      bestDraft = candidate;
+      break;
+    }
+  }
+
+  // Fallback in theoretical exhaustion
+  if(!bestDraft){
+    bestDraft = pick(langPack.OPEN[b]).replace("{biz}", CONFIG.BUSINESS_NAME) + " " +
+                (langPack.DETAIL.Staff ? pick(langPack.DETAIL.Staff[b]) : "") + " " +
+                pick(langPack.CLOSE[b]).replace("{biz}", CONFIG.BUSINESS_NAME);
+  }
+
+  return bestDraft;
+}
+
+/* ---------- State ---------- */
+let rating = 0;
+let selectedTags = new Set();
+const EMOJI = ["", "😞", "😕", "🙂", "😄", "🤩"];
+
+/* ---------- Language Switch Logic ---------- */
+function setLanguage(lang){
+  if(!I18N[lang]) lang = "en";
+  currentLang = lang;
+  const t = I18N[lang];
+
+  // Update active state in toggle
+  $$(".lang-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.lang === lang));
+
+  // Translate static labels
+  $("#t-rateTitle").textContent = t.rateTitle;
+  $("#t-rateSub").textContent = t.rateSub;
+  $("#t-rateHint").textContent = t.rateHint;
+  $("#t-yourRating").textContent = t.yourRating;
+  $("#changeRating").textContent = t.change;
+  $("#t-chooseTitle").textContent = t.chooseTitle;
+  $("#t-chooseSub").textContent = t.chooseSub;
+  $("#t-optGoogleTitle").textContent = t.optGoogleTitle;
+  $("#t-optGoogleSub").textContent = t.optGoogleSub;
+  $("#t-optPrivateTitle").textContent = t.optPrivateTitle;
+  $("#t-optPrivateSub").textContent = t.optPrivateSub;
+  $("#t-backGoogle").textContent = t.back;
+  $("#t-googleTitle").textContent = t.googleTitle;
+  $("#t-googleSub").textContent = t.googleSub;
+  $("#t-labelChips").textContent = t.labelChips;
+  $("#t-opt1").textContent = t.optional;
+  $("#t-opt2").textContent = t.optional;
+  $("#t-opt3").textContent = t.optional;
+  $("#t-labelDraft").textContent = t.labelDraft;
+  $("#draft").placeholder = t.placeholderDraft;
+  $("#t-tipGoogle").innerHTML = t.tipGoogle;
+  $("#shuffle").textContent = t.btnShuffle;
+  $("#copyOnly").textContent = t.btnCopyOnly;
+  $("#copyOpen").textContent = t.btnCopyOpen;
+  $("#t-step1").textContent = t.step1;
+  $("#t-step2").innerHTML = t.step2;
+  $("#t-step3").innerHTML = t.step3;
+  $("#t-backPrivate").textContent = t.back;
+  $("#t-privateTitle").textContent = t.privateTitle;
+  $("#t-privateSub").textContent = t.privateSub;
+  $("#t-labelFb").textContent = t.labelFb;
+  $("#fbText").placeholder = t.placeholderFb;
+  $("#t-labelName").textContent = t.labelName;
+  $("#fbName").placeholder = t.placeholderName;
+  $("#t-labelPhone").textContent = t.labelPhone;
+  $("#fbPhone").placeholder = t.placeholderPhone;
+  $("#sendFb").textContent = t.btnSendFb;
+  $("#waBtn").textContent = t.btnWa;
+  $("#again").textContent = t.btnAgain;
+  $("#t-foot").textContent = t.foot;
+
+  renderChips();
+
+  if(rating > 0){
+    paint(rating);
+    if($("#s-google").classList.contains("active")){
+      regenerate();
+    }
+  }
+}
+
+$$(".lang-btn").forEach(btn => {
+  btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+});
+
+/* ---------- Render Chips ---------- */
+function renderChips(){
+  const chipsEl = $("#chips");
+  chipsEl.innerHTML = "";
+  const t = I18N[currentLang];
+  TAG_KEYS.forEach(key => {
+    const c = document.createElement("button");
+    c.type = "button";
+    c.className = "chip" + (selectedTags.has(key) ? " on" : "");
+    c.textContent = t.tags[key] || key;
+    c.dataset.key = key;
+    c.addEventListener("click", () => {
+      selectedTags.has(key) ? selectedTags.delete(key) : selectedTags.add(key);
+      c.classList.toggle("on");
+      regenerate();
+    });
+    chipsEl.appendChild(c);
+  });
+}
+
+/* ---------- Init Branding ---------- */
+document.title = "Rate " + CONFIG.BUSINESS_NAME;
+$("#bizName").textContent = CONFIG.BUSINESS_NAME;
+$("#bizTag").textContent = CONFIG.TAGLINE;
+if(CONFIG.LOGO_URL){
+  const img = new Image(); img.alt=""; img.src = CONFIG.LOGO_URL;
+  img.onload = () => { $("#logo").textContent=""; $("#logo").appendChild(img); };
+}else{
+  $("#logo").textContent = (CONFIG.BUSINESS_NAME.trim()[0] || "F").toUpperCase();
+}
+
+/* ---------- Navigation ---------- */
+function show(id){
+  $$(".screen").forEach(s=>s.classList.remove("active"));
+  $("#"+id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$$("[data-back]").forEach(b => b.addEventListener("click", ()=>show(b.dataset.back)));
+
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+/* ---------- Stars Handling ---------- */
+const starsEl = $("#stars");
+for(let i=1;i<=5;i++){
+  const b=document.createElement("button");
+  b.className="star"; b.type="button"; b.textContent="★";
+  b.setAttribute("role","radio"); b.setAttribute("aria-label", i+" star"+(i>1?"s":""));
+  b.dataset.v=i;
+  b.addEventListener("mouseenter",()=>paint(i));
+  b.addEventListener("focus",()=>paint(i));
+  b.addEventListener("click",()=>choose(i,b));
+  starsEl.appendChild(b);
+}
+starsEl.addEventListener("mouseleave",()=>paint(rating));
+
+function paint(n){
+  $$(".star").forEach(s=>s.classList.toggle("on", +s.dataset.v<=n));
+  const t = I18N[currentLang] || I18N.en;
+  $("#rateLabel").textContent = n ? EMOJI[n]+"  "+t.labels[n] : "";
+}
+
+function choose(n,btn){
+  rating=n; paint(n);
+  btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop");
+  $("#chosenStars").textContent = "★".repeat(n)+"☆".repeat(5-n);
+  setTimeout(()=>show("s-choose"), 450);
+}
+$("#changeRating").addEventListener("click",()=>show("s-rate"));
+
+/* ---------- Google Path ---------- */
+function regenerate(){
+  $("#draft").value = buildDraft(rating, [...selectedTags]);
+  updateCount();
+}
+function updateCount(){ $("#cnt").textContent = $("#draft").value.length; }
+$("#draft").addEventListener("input", updateCount);
+
+$("#goGoogle").addEventListener("click",()=>{
+  selectedTags.clear();
+  renderChips();
+  regenerate();
+  show("s-google");
+});
+$("#shuffle").addEventListener("click", regenerate);
+
+async function copyText(txt){
+  try{ await navigator.clipboard.writeText(txt); return true; }
+  catch(e){
+    const ta=$("#draft"); ta.select(); ta.setSelectionRange(0,99999);
+    try{ return document.execCommand("copy"); }catch(_){ return false; }
+  }
+}
+
+// When copied, lock this review so nobody else gets it!
+$("#copyOnly").addEventListener("click", async()=>{
+  const val = $("#draft").value;
+  const t = I18N[currentLang];
+  const ok = await copyText(val);
+  if(ok) {
+    markReviewUsed(val);
+    toast(t.toastCopied);
+  } else {
+    toast(t.toastManual);
+  }
+});
+
+$("#copyOpen").addEventListener("click", async()=>{
+  const val = $("#draft").value;
+  const t = I18N[currentLang];
+  const ok = await copyText(val);
+  markReviewUsed(val);
+  toast(ok ? t.toastCopiedOpen : t.toastManualOpen);
+  setTimeout(()=>{ window.open(CONFIG.GOOGLE_REVIEW_URL, "_blank", "noopener"); }, 700);
+  finish(t.doneGoogleTitle, t.doneGoogleMsg, true);
+});
+
+/* ---------- Private Feedback Path ---------- */
+$("#goPrivate").addEventListener("click",()=>{ show("s-private"); });
+$("#fbText").addEventListener("input",()=>{ $("#sendFb").disabled = $("#fbText").value.trim().length < 3; });
+
+function feedbackPayload(){
+  return {
+    business: CONFIG.BUSINESS_NAME,
+    rating: rating,
+    message: $("#fbText").value.trim(),
+    name: $("#fbName").value.trim(),
+    phone: $("#fbPhone").value.trim(),
+    language: currentLang,
+    time: new Date().toISOString()
+  };
+}
+
+$("#sendFb").addEventListener("click", async()=>{
+  const p = feedbackPayload();
+  const t = I18N[currentLang];
+  const btn=$("#sendFb"); btn.disabled=true; btn.textContent=t.btnSending;
+
+  // Local storage backup
+  try{
+    const k="rv_feedback_"+hashText(CONFIG.BUSINESS_NAME);
+    const a=JSON.parse(localStorage.getItem(k)||"[]"); a.push(p); localStorage.setItem(k,JSON.stringify(a));
+  }catch(e){}
+
+  // Google Sheet Web App endpoint
+  if(CONFIG.FEEDBACK_ENDPOINT && !CONFIG.FEEDBACK_ENDPOINT.includes("[GOOGLE_APPS_SCRIPT")){
+    try{
+      await fetch(CONFIG.FEEDBACK_ENDPOINT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(p)
+      });
+    }catch(err){}
+  }
+
+  btn.textContent=t.btnSendFb;
+  finish(t.donePrivateTitle, t.donePrivateMsg, false);
+});
+
+/* ---------- Finish Screen ---------- */
+function finish(title,msg,celebrate){
+  $("#doneTitle").textContent=title; $("#doneMsg").textContent=msg;
+  const wa=$("#waBtn");
+  if(CONFIG.WHATSAPP_NUMBER && !CONFIG.WHATSAPP_NUMBER.includes("91XXXXXXXXXX") && !celebrate){
+    wa.style.display="flex";
+    wa.onclick=()=>{
+      const p=feedbackPayload();
+      const text = `Feedback for ${CONFIG.BUSINESS_NAME}\nRating: ${rating}/5\n${p.message}${p.name?"\nName: "+p.name:""}${p.phone?"\nPhone: "+p.phone:""}`;
+      window.open("https://wa.me/"+CONFIG.WHATSAPP_NUMBER+"?text="+encodeURIComponent(text),"_blank","noopener");
+    };
+  } else wa.style.display="none";
+  show("s-done");
+  if(celebrate) confetti();
+}
+
+$("#again").addEventListener("click",()=>{
+  rating=0; selectedTags.clear(); paint(0);
+  $("#fbText").value=""; $("#fbName").value=""; $("#fbPhone").value=""; $("#sendFb").disabled=true;
+  show("s-rate");
+});
+
+/* ---------- Confetti Animation ---------- */
+function confetti(){
+  const cv=$("#confetti"), ctx=cv.getContext("2d");
+  cv.width=innerWidth; cv.height=innerHeight;
+  const colors=["#be185d","#831843","#fbbf24","#22c55e","#db2777","#f472b6"];
+  const ps=Array.from({length:110},()=>({
+    x:Math.random()*cv.width, y:-20-Math.random()*cv.height*.4,
+    r:4+Math.random()*5, c:colors[Math.floor(Math.random()*colors.length)],
+    vy:2+Math.random()*3.5, vx:-1.5+Math.random()*3, a:Math.random()*6
+  }));
+  let f=0;
+  (function tick(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p=>{
+      p.y+=p.vy; p.x+=p.vx+Math.sin((f+p.a)/10); p.a+=.1;
+      ctx.fillStyle=p.c; ctx.fillRect(p.x,p.y,p.r,p.r*1.6);
+    });
+    if(++f<170) requestAnimationFrame(tick); else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+// Initial bootstrap
+syncUsedReviews();
+setLanguage(currentLang);
+</script>
+</body>
+</html>
