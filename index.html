@@ -221,50 +221,24 @@
       <p class="hint" id="t-rateHint">Your rating helps us improve and helps others find us.</p>
     </section>
 
-    <!-- SCREEN 2: choose how to share (IDENTICAL OPTIONS FOR ALL RATINGS) -->
-    <section class="screen" id="s-choose">
+    <!-- SCREEN 2: Google review helper -->
+    <section class="screen" id="s-google">
       <div class="chosen">
         <span id="t-yourRating">Your rating</span> <b id="chosenStars"></b>
         <button id="changeRating">Change</button>
       </div>
-      <h2 id="t-chooseTitle">How would you like to share it?</h2>
-      <p class="sub" id="t-chooseSub">Both options are open to you. Pick whichever suits you.</p>
 
-      <!-- Option A: Google Review -->
-      <button class="choice" id="goGoogle">
-        <div class="ic">🌍</div>
-        <div>
-          <strong id="t-optGoogleTitle">Review us on Google</strong>
-          <span id="t-optGoogleSub">Public review. We'll help you draft it, and you can edit every word.</span>
-        </div>
-        <div class="arrow">›</div>
-      </button>
-
-      <!-- Option B: Private Feedback -->
-      <button class="choice" id="goPrivate">
-        <div class="ic">💬</div>
-        <div>
-          <strong id="t-optPrivateTitle">Send private feedback</strong>
-          <span id="t-optPrivateSub">Goes straight to the owner so we can act on it quickly.</span>
-        </div>
-        <div class="arrow">›</div>
-      </button>
-    </section>
-
-    <!-- SCREEN 3: Google review helper -->
-    <section class="screen" id="s-google">
-      <button class="back" data-back="s-choose" id="t-backGoogle">← Back</button>
       <h2 id="t-googleTitle">Write your Google review</h2>
       <p class="sub" id="t-googleSub">Pick what stood out, then tweak the draft so it sounds like you.</p>
 
-      <span class="label"><span id="t-labelChips">What stood out?</span> <small style="font-weight:400;color:var(--muted)" id="t-opt1">(optional)</small></span>
+      <span class="label"><span id="t-labelChips">What services/aspects stood out?</span> <small style="font-weight:400;color:var(--muted)" id="t-opt1">(optional)</small></span>
       <div class="chips" id="chips"></div>
 
-      <span class="label" id="t-labelDraft">Your review</span>
+      <span class="label" id="t-labelDraft">Your review (Unique draft ready)</span>
       <textarea id="draft" maxlength="650" placeholder="Write your review here..."></textarea>
       <div class="count"><span id="cnt">0</span>/650</div>
 
-      <div class="tip" id="t-tipGoogle">✍️ Please make sure the review reflects <b>your own genuine experience</b>. Edit the draft freely. Honest, personal reviews help other customers most.</div>
+      <div class="tip" id="t-tipGoogle">✍️ Please make sure the review reflects <b>your own genuine experience</b>. Edit the draft freely. Honest reviews help other clients most.</div>
 
       <div class="row">
         <button class="btn ghost" id="shuffle">🔄 New draft</button>
@@ -279,43 +253,19 @@
       </ol>
     </section>
 
-    <!-- SCREEN 4: private feedback -->
-    <section class="screen" id="s-private">
-      <button class="back" data-back="s-choose" id="t-backPrivate">← Back</button>
-      <h2 id="t-privateTitle">Tell us privately</h2>
-      <p class="sub" id="t-privateSub">Your message goes straight to the owner. Nothing is posted publicly.</p>
-
-      <div class="field">
-        <span class="label" id="t-labelFb">Your feedback</span>
-        <textarea id="fbText" maxlength="800" placeholder="What went well? What could we do better?"></textarea>
-      </div>
-      <div class="row field">
-        <div>
-          <span class="label"><span id="t-labelName">Name</span> <small style="font-weight:400;color:var(--muted)" id="t-opt2">(optional)</small></span>
-          <input type="text" id="fbName" placeholder="Your name" autocomplete="name" />
-        </div>
-        <div>
-          <span class="label"><span id="t-labelPhone">Phone</span> <small style="font-weight:400;color:var(--muted)" id="t-opt3">(optional)</small></span>
-          <input type="tel" id="fbPhone" placeholder="So we can reach you" autocomplete="tel" inputmode="tel" />
-        </div>
-      </div>
-      <button class="btn primary" id="sendFb" disabled>Send feedback</button>
-    </section>
-
-    <!-- SCREEN 5: thank you -->
+    <!-- SCREEN 3: thank you -->
     <section class="screen" id="s-done">
       <div class="done">
         <div class="tick">✓</div>
         <h2 id="doneTitle">Thank you!</h2>
         <p class="sub" id="doneMsg">We really appreciate your time.</p>
-        <button class="btn wa" id="waBtn" style="display:none">Also message us on WhatsApp</button>
         <button class="btn ghost" id="again">Start over</button>
       </div>
     </section>
 
   </main>
 
-  <div class="foot" id="t-foot">Every rating gets the same options. No filtering, no pressure.</div>
+  <div class="foot" id="t-foot">Directly post your review on Google • Millions of distinct review drafts</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -365,13 +315,6 @@ const I18N = {
     rateHint: "Your rating helps us improve and helps other ladies find us.",
     yourRating: "Your rating",
     change: "Change",
-    chooseTitle: "How would you like to share it?",
-    chooseSub: "Both options are open to you. Pick whichever suits you.",
-    optGoogleTitle: "Review us on Google",
-    optGoogleSub: "Public review. We'll help you draft a unique review, and you can edit every word.",
-    optPrivateTitle: "Send private feedback",
-    optPrivateSub: "Goes straight to the owner so we can act on it quickly.",
-    back: "← Back",
     googleTitle: "Write your Google review",
     googleSub: "Pick what stood out, then tweak the draft so it sounds like you.",
     labelChips: "What services/aspects stood out?",
@@ -385,23 +328,10 @@ const I18N = {
     step1: "Tap the button above. Your text is copied and Google opens.",
     step2: "Choose your star rating on Google and <b>paste</b> your review.",
     step3: "Tap <b>Post</b>. Thank you!",
-    privateTitle: "Tell us privately",
-    privateSub: "Your message goes straight to the owner. Nothing is posted publicly.",
-    labelFb: "Your feedback",
-    placeholderFb: "What went well? What could we do better?",
-    labelName: "Name",
-    placeholderName: "Your name",
-    labelPhone: "Phone",
-    placeholderPhone: "So we can reach you",
-    btnSendFb: "Send feedback",
-    btnSending: "Sending...",
     doneGoogleTitle: "Thanks for sharing on Google!",
     doneGoogleMsg: "Your words help other clients discover Finaaz. We really appreciate it!",
-    donePrivateTitle: "Thank you for telling us",
-    donePrivateMsg: "Your feedback has been shared with the owner and we will use it to improve.",
-    btnWa: "Also message us on WhatsApp",
     btnAgain: "Start over",
-    foot: "Every rating gets the same options. Millions of distinct review drafts.",
+    foot: "Directly post your review on Google • Millions of distinct review drafts",
     toastCopied: "Copied to clipboard ✓ (Marked unique)",
     toastManual: "Press and hold to copy",
     toastCopiedOpen: "Copied! Paste it on Google ✓",
@@ -423,13 +353,6 @@ const I18N = {
     rateHint: "आपकी रेटिंग हमें सेवा बेहतर बनाने और अन्य महिलाओं को हमें ढूंढने में मदद करती है।",
     yourRating: "आपकी रेटिंग",
     change: "बदलें",
-    chooseTitle: "आप इसे कैसे साझा करना चाहेंगे?",
-    chooseSub: "दोनों विकल्प आपके लिए खुले हैं। जो आपको सही लगे उसे चुनें।",
-    optGoogleTitle: "Google पर रिव्यू लिखें",
-    optGoogleSub: "सार्वजनिक समीक्षा। हम एकदम अनोखा ड्राफ्ट तैयार करेंगे, आप बदलाव कर सकते हैं।",
-    optPrivateTitle: "निजी सुझाव भेजें",
-    optPrivateSub: "सीधे मालिक के पास जाता है ताकि हम तुरंत सुधार कर सकें।",
-    back: "← वापस",
     googleTitle: "अपना Google रिव्यू लिखें",
     googleSub: "जो खास लगा उसे चुनें, फिर ड्राफ्ट को अपने अनुसार बदलें।",
     labelChips: "क्या खास रहा? (सर्विस चुनें)",
@@ -443,23 +366,10 @@ const I18N = {
     step1: "ऊपर दिए गए बटन पर टैप करें। टेक्स्ट कॉपी हो जाएगा और Google खुलेगा।",
     step2: "Google पर स्टार चुनें और अपना रिव्यू <b>पेस्ट</b> करें।",
     step3: "<b>Post</b> पर टैप करें। धन्यवाद!",
-    privateTitle: "हमें निजी तौर पर बताएं",
-    privateSub: "आपका संदेश सीधे मालिक तक पहुंचेगा। इसे सार्वजनिक नहीं किया जाएगा।",
-    labelFb: "आपका सुझाव",
-    placeholderFb: "क्या अच्छा लगा? हम क्या बेहतर कर सकते हैं?",
-    labelName: "नाम",
-    placeholderName: "आपका नाम",
-    labelPhone: "फ़ोन",
-    placeholderPhone: "ताकि हम संपर्क कर सकें",
-    btnSendFb: "फीडबैक भेजें",
-    btnSending: "भेजा जा रहा है...",
     doneGoogleTitle: "Google पर साझा करने के लिए धन्यवाद!",
     doneGoogleMsg: "आपकी समीक्षा अन्य ग्राहकों को Finaaz ढूंढने में मदद करती है। दिल से धन्यवाद!",
-    donePrivateTitle: "सुझाव देने के लिए धन्यवाद",
-    donePrivateMsg: "आपका सुझाव मालिक तक पहुंचा दिया गया है। हम इस पर अवश्य काम करेंगे।",
-    btnWa: "व्हाट्सएप पर भी संदेश भेजें",
     btnAgain: "फिर से शुरू करें",
-    foot: "हर रेटिंग के लिए समान विकल्प। लाखों अनोखे रिव्यू ड्राफ्ट्स।",
+    foot: "सीधे Google पर अपनी समीक्षा पोस्ट करें • लाखों अनोखे रिव्यू ड्राफ्ट्स",
     toastCopied: "क्लिपबोर्ड पर कॉपी किया गया ✓ (यूनिक दर्ज)",
     toastManual: "कॉपी करने के लिए दबाकर रखें",
     toastCopiedOpen: "कॉपी हो गया! Google पर पेस्ट करें ✓",
@@ -481,13 +391,6 @@ const I18N = {
     rateHint: "तुमचे रेटिंग आम्हाला सुधारणा करण्यास आणि इतर महिलांना आम्हाला शोधण्यास मदत करते.",
     yourRating: "तुमचे रेटिंग",
     change: "बदला",
-    chooseTitle: "तुम्हाला हा अनुभव कसा शेअर करायचा आहे?",
-    chooseSub: "दोन्ही पर्याय तुमच्यासाठी खुले आहेत. जो तुम्हाला सोयीचा वाटेल तो निवडा.",
-    optGoogleTitle: "Google वर रिव्ह्यू लिहा",
-    optGoogleSub: "सार्वजनिक रिव्ह्यू. आम्ही एक अनोखा मसुदा तयार करू, तुम्ही हवा तसा बदल करू शकता.",
-    optPrivateTitle: "खाजगी अभिप्राय पाठवा",
-    optPrivateSub: "थेट मालकाकडे जातो जेणेकरून आम्ही त्यावर त्वरित सुधारणा करू शकू.",
-    back: "← मागे",
     googleTitle: "तुमचा Google रिव्ह्यू लिहा",
     googleSub: "जे विशेष वाटले ते निवडा, नंतर मसुद्यात तुमच्यानुसार बदल करा.",
     labelChips: "काय विशेष वाटले? (सेवा निवडा)",
@@ -501,23 +404,10 @@ const I18N = {
     step1: "वरील बटणावर टॅप करा. मजकूर कॉपी होईल आणि Google उघडेल.",
     step2: "Google वर तुमचे स्टार रेटिंग निवडा आणि रिव्ह्यू <b>पेस्ट</b> करा.",
     step3: "<b>Post</b> वर टॅप करा. धन्यवाद!",
-    privateTitle: "आम्हाला खाजगीरित्या सांगा",
-    privateSub: "तुमचा संदेश थेट मालकापर्यंत पोहोचेल. काहीही सार्वजनिकरित्या पोस्ट केले जात नाही.",
-    labelFb: "तुमचा अभिप्राय",
-    placeholderFb: "काय आवडले? आम्ही काय अधिक चांगले करू शकतो?",
-    labelName: "नाव",
-    placeholderName: "तुमचे नाव",
-    labelPhone: "फोन",
-    placeholderPhone: "आम्ही संपर्क करू शकू म्हणून",
-    btnSendFb: "अभिप्राय पाठवा",
-    btnSending: "पाठवत आहे...",
     doneGoogleTitle: "Google वर शेअर केल्याबद्दल धन्यवाद!",
     doneGoogleMsg: "तुमचा रिव्ह्यू इतर महिलांना Finaaz शोधण्यात मदत करतो. मनःपूर्वक धन्यवाद!",
-    donePrivateTitle: "अभिप्राय दिल्याबद्दल धन्यवाद",
-    donePrivateMsg: "तुमचा अभिप्राय थेट मालकापर्यंत पोहोचवला आहे. आम्ही त्यावर सुधारणा करू.",
-    btnWa: "व्हॉट्सॲपवरही मेसेज पाठवा",
     btnAgain: "पुन्हा सुरू करा",
-    foot: "प्रत्येक रेटिंगसाठी समान पर्याय. लाखो अनोखे मसुदे.",
+    foot: "थेट Google वर तुमचा रिव्ह्यू पोस्ट करा • लाखो अनोखे मसुदे",
     toastCopied: "क्लिपबोर्डवर कॉपी केले ✓ (युनिक नोंदणीकृत)",
     toastManual: "कॉपी करण्यासाठी दाबून ठेवा",
     toastCopiedOpen: "कॉपी झाले! Google वर पेस्ट करा ✓",
@@ -1101,8 +991,6 @@ function setLanguage(lang){
   $("#t-googleSub").textContent = t.googleSub;
   $("#t-labelChips").textContent = t.labelChips;
   $("#t-opt1").textContent = t.optional;
-  $("#t-opt2").textContent = t.optional;
-  $("#t-opt3").textContent = t.optional;
   $("#t-labelDraft").textContent = t.labelDraft;
   $("#draft").placeholder = t.placeholderDraft;
   $("#t-tipGoogle").innerHTML = t.tipGoogle;
@@ -1112,17 +1000,6 @@ function setLanguage(lang){
   $("#t-step1").textContent = t.step1;
   $("#t-step2").innerHTML = t.step2;
   $("#t-step3").innerHTML = t.step3;
-  $("#t-backPrivate").textContent = t.back;
-  $("#t-privateTitle").textContent = t.privateTitle;
-  $("#t-privateSub").textContent = t.privateSub;
-  $("#t-labelFb").textContent = t.labelFb;
-  $("#fbText").placeholder = t.placeholderFb;
-  $("#t-labelName").textContent = t.labelName;
-  $("#fbName").placeholder = t.placeholderName;
-  $("#t-labelPhone").textContent = t.labelPhone;
-  $("#fbPhone").placeholder = t.placeholderPhone;
-  $("#sendFb").textContent = t.btnSendFb;
-  $("#waBtn").textContent = t.btnWa;
   $("#again").textContent = t.btnAgain;
   $("#t-foot").textContent = t.foot;
 
@@ -1208,7 +1085,10 @@ function choose(n,btn){
   rating=n; paint(n);
   btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop");
   $("#chosenStars").textContent = "★".repeat(n)+"☆".repeat(5-n);
-  setTimeout(()=>show("s-choose"), 450);
+  selectedTags.clear();
+  renderChips();
+  regenerate();
+  setTimeout(()=>show("s-google"), 350);
 }
 $("#changeRating").addEventListener("click",()=>show("s-rate"));
 
@@ -1219,13 +1099,6 @@ function regenerate(){
 }
 function updateCount(){ $("#cnt").textContent = $("#draft").value.length; }
 $("#draft").addEventListener("input", updateCount);
-
-$("#goGoogle").addEventListener("click",()=>{
-  selectedTags.clear();
-  renderChips();
-  regenerate();
-  show("s-google");
-});
 $("#shuffle").addEventListener("click", regenerate);
 
 async function copyText(txt){
@@ -1259,68 +1132,15 @@ $("#copyOpen").addEventListener("click", async()=>{
   finish(t.doneGoogleTitle, t.doneGoogleMsg, true);
 });
 
-/* ---------- Private Feedback Path ---------- */
-$("#goPrivate").addEventListener("click",()=>{ show("s-private"); });
-$("#fbText").addEventListener("input",()=>{ $("#sendFb").disabled = $("#fbText").value.trim().length < 3; });
-
-function feedbackPayload(){
-  return {
-    business: CONFIG.BUSINESS_NAME,
-    rating: rating,
-    message: $("#fbText").value.trim(),
-    name: $("#fbName").value.trim(),
-    phone: $("#fbPhone").value.trim(),
-    language: currentLang,
-    time: new Date().toISOString()
-  };
-}
-
-$("#sendFb").addEventListener("click", async()=>{
-  const p = feedbackPayload();
-  const t = I18N[currentLang];
-  const btn=$("#sendFb"); btn.disabled=true; btn.textContent=t.btnSending;
-
-  // Local storage backup
-  try{
-    const k="rv_feedback_"+hashText(CONFIG.BUSINESS_NAME);
-    const a=JSON.parse(localStorage.getItem(k)||"[]"); a.push(p); localStorage.setItem(k,JSON.stringify(a));
-  }catch(e){}
-
-  // Google Sheet Web App endpoint
-  if(CONFIG.FEEDBACK_ENDPOINT && !CONFIG.FEEDBACK_ENDPOINT.includes("[GOOGLE_APPS_SCRIPT")){
-    try{
-      await fetch(CONFIG.FEEDBACK_ENDPOINT, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(p)
-      });
-    }catch(err){}
-  }
-
-  btn.textContent=t.btnSendFb;
-  finish(t.donePrivateTitle, t.donePrivateMsg, false);
-});
-
 /* ---------- Finish Screen ---------- */
 function finish(title,msg,celebrate){
   $("#doneTitle").textContent=title; $("#doneMsg").textContent=msg;
-  const wa=$("#waBtn");
-  if(CONFIG.WHATSAPP_NUMBER && !CONFIG.WHATSAPP_NUMBER.includes("91XXXXXXXXXX") && !celebrate){
-    wa.style.display="flex";
-    wa.onclick=()=>{
-      const p=feedbackPayload();
-      const text = `Feedback for ${CONFIG.BUSINESS_NAME}\nRating: ${rating}/5\n${p.message}${p.name?"\nName: "+p.name:""}${p.phone?"\nPhone: "+p.phone:""}`;
-      window.open("https://wa.me/"+CONFIG.WHATSAPP_NUMBER+"?text="+encodeURIComponent(text),"_blank","noopener");
-    };
-  } else wa.style.display="none";
   show("s-done");
   if(celebrate) confetti();
 }
 
 $("#again").addEventListener("click",()=>{
   rating=0; selectedTags.clear(); paint(0);
-  $("#fbText").value=""; $("#fbName").value=""; $("#fbPhone").value=""; $("#sendFb").disabled=true;
   show("s-rate");
 });
 
